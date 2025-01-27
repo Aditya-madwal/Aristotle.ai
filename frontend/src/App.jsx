@@ -6,12 +6,14 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Page404 from "./pages/Page404";
-import AuthRequiringRoutes from "./components/Authrequired";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constants";
+import AuthRequiringRoutes from "./lib/auth/Authrequired";
+import { ACCESS_TOKEN } from "./lib/api/constants";
 import { useContext } from "react";
 import { MyContext } from "./MyContext";
-import api from "./api";
+import api from "./lib/api/apiConfig";
 import { useNavigate } from "react-router-dom";
+import RedirectIfAuthenticated from "./lib/auth/RedirectIfAuthenticated";
+import Logout from "./lib/auth/Logout";
 
 const RegisterAndLogout = () => {
   const navigate = useNavigate();
@@ -34,9 +36,10 @@ function App() {
   useEffect(() => {
     const fetchMyData = async () => {
       try {
-        const response = await api.get(`/api/showme`);
-        setMe(response.data);
-        console.log(response.data.email);
+        const response = await api.get(`/users/isauthenticated`);
+
+        setMe(response.data.user);
+        console.log(response.data.user);
       } catch (error) {
         if (error.response) {
           setError(
@@ -67,8 +70,24 @@ function App() {
             </AuthRequiringRoutes>
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
+        <Route
+          path="/auth/login"
+          element={
+            <RedirectIfAuthenticated>
+              <Login />
+            </RedirectIfAuthenticated>
+          }
+        />
+
+        <Route
+          path="/auth/register"
+          element={
+            <RedirectIfAuthenticated>
+              <Register />
+            </RedirectIfAuthenticated>
+          }
+        />
+        <Route path="/auth/logout" element={<Logout />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </BrowserRouter>

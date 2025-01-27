@@ -1,222 +1,214 @@
 import { useState } from "react";
-import api from "../api";
-import { Link, useNavigate } from "react-router-dom"; // useNavigate = redirect
+import { Link, useNavigate } from "react-router-dom";
+import authServices from "../lib/api/authServices/authservices";
 
 const Register = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [first_name, setFname] = useState("");
-  const [last_name, setLname] = useState("");
-  const [pfp, setPfp] = useState(null);
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [bio, setBio] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    password2: "",
+    first_name: "",
+    last_name: "",
+    course: "",
+    bio: ""
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleImageChange = (e) => {
-    setPfp(e.target.files[0]);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
+
+    if (formData.password !== formData.password2) {
+      alert("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const formData = new FormData();
-      formData.append("username", username);
-      formData.append("first_name", first_name);
-      formData.append("last_name", last_name);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("password2", password2);
-      formData.append("bio", bio);
-      formData.append("pfp", pfp);
-      console.log(formData);
-
-      try {
-        const response = await api.post("users/register", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(response.data);
-        navigate("/login");
-      } catch (error) {
-        console.error("Error:", error);
-      }
-      const res = await api.post("users/register", {
-        username,
-        password,
-        password2,
-        email,
-        first_name,
-        last_name,
-        pfp,
-      });
-
-      // navigate("/login");
+      const response = await authServices.register(formData);
+      console.log("Registration successful:", response);
+      alert("Registration successful! Please login.");
+      navigate("/auth/login");
     } catch (error) {
-      alert("some error occured, please try again");
+      console.error("Registration error:", error);
+      alert(error.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
-      {loading ? (
-        <div className="text-center text-gray-600">Loading...</div>
-      ) : null}
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <main>
-          <div>
-            <h1 className="text-2xl font-bold mb-4">Welcome to MyApp</h1>
-            <p className="text-gray-600 mb-6">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              nam dolorum aliquam, quibusdam aperiam voluptatum.
-            </p>
+    <section className="bg-white h-screen">
+      <div className="lg:grid lg:grid-cols-12 lg:h-full">
+        {/* Sidebar with Image */}
+        <aside className="relative lg:col-span-5 xl:col-span-6 h-full hidden lg:block">
+          
+          <img
+            alt=""
+            src="https://i.pinimg.com/736x/c3/88/80/c3888023324759ca0e60fdbb9b2a6119.jpg"
+            className="absolute inset-0 h-full w-full object-cover p-8 rounded-[100px]"
+          />
+        </aside>
 
-            <form action="post" onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="FirstName"
-                  className="block text-sm font-medium text-gray-700">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="FirstName"
-                  name="first_name"
-                  value={first_name}
-                  onChange={(e) => setFname(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+        {/* Form Section */}
+        <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 overflow-y-auto">
+          <div className="max-w-xl lg:max-w-3xl w-full">
+            {loading && <div className="text-center text-gray-600">Loading...</div>}
 
-              <div>
-                <label
-                  htmlFor="LastName"
-                  className="block text-sm font-medium text-gray-700">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="LastName"
-                  name="last_name"
-                  value={last_name}
-                  onChange={(e) => setLname(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+            <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
+              Create Your Account
+            </h1>
 
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-700">
-                  Username
+            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
+              {/* Username */}
+              <div className="col-span-6 sm:col-span-3">
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  Username*
                 </label>
                 <input
                   type="text"
                   id="username"
                   name="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700">
-                  Email
+              {/* Email */}
+              <div className="col-span-6 sm:col-span-3">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email*
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="pfp"
-                  className="block text-sm font-medium text-gray-700">
-                  Upload file
+              {/* First Name */}
+              <div className="col-span-6 sm:col-span-3">
+                <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+                  First Name*
                 </label>
                 <input
-                  id="pfp"
-                  type="file"
-                  onChange={handleImageChange}
-                  className="mt-1 block w-full text-gray-500 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="bio"
-                  className="block text-sm font-medium text-gray-700">
+              {/* Last Name */}
+              <div className="col-span-6 sm:col-span-3">
+                <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+                  Last Name*
+                </label>
+                <input
+                  type="text"
+                  id="last_name"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                />
+              </div>
+
+              {/* Password */}
+              <div className="col-span-6 sm:col-span-3">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  Password*
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                />
+              </div>
+
+              {/* Password Confirmation */}
+              <div className="col-span-6 sm:col-span-3">
+                <label htmlFor="password2" className="block text-sm font-medium text-gray-700">
+                  Confirm Password*
+                </label>
+                <input
+                  type="password"
+                  id="password2"
+                  name="password2"
+                  value={formData.password2}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                />
+              </div>
+
+              {/* Course */}
+              <div className="col-span-6">
+                <label htmlFor="course" className="block text-sm font-medium text-gray-700">
+                  Course*
+                </label>
+                <input
+                  type="text"
+                  id="course"
+                  name="course"
+                  value={formData.course}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                />
+              </div>
+
+              {/* Bio */}
+              <div className="col-span-6">
+                <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
                   Bio
                 </label>
                 <textarea
                   id="bio"
                   name="bio"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  rows="3"
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="Password"
-                  className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="Password"
-                  name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="PasswordConfirmation"
-                  className="block text-sm font-medium text-gray-700">
-                  Password Confirmation
-                </label>
-                <input
-                  type="password"
-                  id="PasswordConfirmation"
-                  name="password_confirmation"
-                  value={password2}
-                  onChange={(e) => setPassword2(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
+              <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
                   type="submit"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Create an account
+                  className="inline-block shrink-0 rounded-md border bg-[#7f55e0] px-12 py-3 text-sm font-medium text-white transition  focus:outline-none focus:ring active:text-blue-500"
+                >
+                  Create Account
                 </button>
-                <p className="text-sm text-gray-600">
+
+                <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                   Already have an account?{" "}
-                  <Link
-                    to={"/login"}
-                    className="text-indigo-600 hover:text-indigo-700">
+                  <Link to="/auth/login" className="text-gray-700 underline">
                     Log in
                   </Link>
-                  .
                 </p>
               </div>
             </form>
