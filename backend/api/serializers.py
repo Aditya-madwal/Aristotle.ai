@@ -25,7 +25,7 @@ class CalenderSerializer(serializers.ModelSerializer):
 class PDFChatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDFChats
-        fields = ['sender', 'content', 'date_uploded']
+        fields = ['sender', 'content', 'date_uploaded']
 
 
 class PDFSerializer(serializers.ModelSerializer):
@@ -34,7 +34,7 @@ class PDFSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDF
         fields = ['uid', 'url', 'size', 'notes',
-                  'parent_roadmap', 'user', 'date_uploded', 'chats']
+                  'parent_roadmap', 'user', 'date_uploaded', 'chats']
 
     def get_chats(self, obj):
         chats = PDFChats.objects.filter(pdf=obj)
@@ -51,14 +51,14 @@ class FlashCardSetSerializer(serializers.ModelSerializer):
 class ResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
-        fields = ['id', 'type', 'title', 'url',
+        fields = ['uid', 'type', 'title', 'url',
                   'description', 'estimated_time']
 
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'title', 'description', 'difficulty']
+        fields = ['uid', 'title', 'description', 'difficulty']
 
 
 class MileStoneSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class MileStoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MileStone
-        fields = ['id', 'title', 'duration', 'status',
+        fields = ['uid', 'title', 'duration', 'status',
                   'topics', 'resources', 'projects']
 
     def get_resources(self, obj):

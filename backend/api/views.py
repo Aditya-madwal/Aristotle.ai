@@ -191,7 +191,7 @@ class PDFoperations(APIView):
             pdfs = PDF.objects.filter(
                 user=request.user
             ).order_by(
-                '-date_uploded'
+                '-date_uploaded'
             )[:RECENT_PDFS_LIMIT]
 
             serializer = PDFSerializer(pdfs, many=True)
