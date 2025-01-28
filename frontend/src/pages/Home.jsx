@@ -15,10 +15,10 @@ const Home = () => {
 
   return (
     <>
-      <DefaultLayout>
+      <DefaultLayout RightSidebar={TaskSidebar}>
         <div className="p-6 bg-gray-100 min-h-screen flex  items-center justify-center">
           <StudyDashboard />
-          <TaskSidebar />
+          {/* <TaskSidebar /> */}
         </div>
       </DefaultLayout>
     </>

@@ -45,7 +45,7 @@ class Roadmap(typing.TypedDict):
 class RoadmapGenerator:
     def __init__(self, api_key: str):
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        self.model = genai.GenerativeModel(os.getenv('GOOGLE_GEMINI_MODEL'))
 
     def _generate_prompt(self, topic: str, duration: Optional[str] = None,
                          difficulty: Optional[str] = None) -> str:

@@ -34,7 +34,7 @@ const AuthRequiringRoutes = ({ children }) => {
         navigate("auth/login");
       } else {
         SetIsAuth(true);
-        navigate("/");
+        // navigate("/");
       }
     }
   };

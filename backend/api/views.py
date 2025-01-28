@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from httpx import delete
 from rest_framework import status
 from .logic import *
 from django.db.models import Q
@@ -22,6 +23,7 @@ from django.utils.decorators import method_decorator
 
 from .gemini_logic import pdf_summarize, roadmap, flashcards
 from .gemini_logic.roadmap import generate_roadmap_data
+from .gemini_logic.flashcards import FlashcardsSet, generate_flashcards_for_topic
 
 from dotenv import load_dotenv
 import os
@@ -39,12 +41,24 @@ class showMe(APIView):
 class RoadmapDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, roadmap_uid, format=None):
+    # Get all roadmaps
+    def get_all_roadmaps(self, request):
+        try:
+            roadmaps = Roadmap.objects.filter(user=request.user)
+            serializer = RoadmapSerializer(roadmaps, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"message": "Failed to get roadmaps", "error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    # Get specific roadmap
+    def get_specific_roadmap(self, request, roadmap_uid):
         try:
             roadmap = Roadmap.objects.get(uid=roadmap_uid)
             serializer = RoadmapSerializer(roadmap)
             return Response(serializer.data, status=status.HTTP_200_OK)
-
         except Roadmap.DoesNotExist:
             return Response(
                 {"error": "Roadmap not found."},
@@ -56,6 +70,12 @@ class RoadmapDetailView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    def get(self, request, roadmap_uid=None):
+        if roadmap_uid is None:
+            return self.get_all_roadmaps(request)
+        return self.get_specific_roadmap(request, roadmap_uid)
+
+    # create roadmap
     def post(self, request):
         topic = request.data["topic"]
         duration = request.data["duration"]
@@ -151,26 +171,199 @@ class PDFoperations(APIView):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
-    def get(self, request, roadmap_uid, pdf_uid):
-        pdf = PDF.objects.get(uid=pdf_uid)
-        pdf_chats = PDFChats.objects.filter(pdf=pdf)
+    # Get all PDFs related to the user and roadmap
+    def get_all_pdfs_for_roadmap(self, request, roadmap_uid):
+        try:
+            roadmap = Roadmap.objects.get(uid=roadmap_uid)
+            pdfs = PDF.objects.filter(
+                user=request.user, parent_roadmap__uid=roadmap_uid)
+            serializer = PDFSerializer(pdfs, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"message": "Failed to get PDFs", "error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-        serializer = PDFSerializer(pdf)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_recent_pdfs(self, request):
+        try:
+            RECENT_PDFS_LIMIT = 10
+            pdfs = PDF.objects.filter(
+                user=request.user
+            ).order_by(
+                '-date_uploded'
+            )[:RECENT_PDFS_LIMIT]
+
+            serializer = PDFSerializer(pdfs, many=True)
+            return Response({
+                "pdfs": serializer.data,
+                "total_count": PDF.objects.filter(user=request.user).count(),
+                "limit": RECENT_PDFS_LIMIT
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"message": "Failed to get PDFs", "error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def get_specific_pdf(self, request, roadmap_uid, pdf_uid):
+        try:
+            pdf = PDF.objects.get(uid=pdf_uid)
+            pdf_chats = PDFChats.objects.filter(pdf=pdf)
+            serializer = PDFSerializer(pdf)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except PDF.DoesNotExist:
+            return Response(
+                {"error": "PDF not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def get(self, request, roadmap_uid=None, pdf_uid=None):
+        if pdf_uid is None and roadmap_uid is not None:
+            return self.get_all_pdfs_for_roadmap(request, roadmap_uid)
+        elif pdf_uid is None and roadmap_uid is None:
+            return self.get_recent_pdfs(request)
+        return self.get_specific_pdf(request, roadmap_uid, pdf_uid)
+
+    def delete(self, request, roadmap_uid=None, pdf_uid=None):
+        try:
+            pdf = PDF.objects.get(uid=pdf_uid)
+            pdf.delete()
+            return Response("messsage: PDF deleted successfully", status=status.HTTP_200_OK)
+        except pdf.DoesNotExist:
+            return Response("messsage: PDF not found", status=status.HTTP_404_NOT_FOUND)
 
 
 class Flashcard_operations(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, roadmap_uid, flashcard_uid):
-        json_content = FlashCardSet.objects.get(uid=flashcard_uid)
-        serializer = FlashCardSetSerializer(json_content)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_all_flashcards(self, request, roadmap_uid):
+        try:
+            # Get all flashcard sets belonging to the roadmap
+            flashcard_sets = FlashCardSet.objects.filter(
+                parent_roadmap__uid=roadmap_uid
+            )
+
+            serializer = FlashCardSetSerializer(flashcard_sets, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"message": "Failed to get flashcard sets", "error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def get_specific_flashcard(self, request, roadmap_uid, flashcard_uid):
+        try:
+            flashcard_set = FlashCardSet.objects.get(
+                uid=flashcard_uid,
+                parent_roadmap__uid=roadmap_uid,
+            )
+            serializer = FlashCardSetSerializer(flashcard_set)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except FlashCardSet.DoesNotExist:
+            return Response(
+                {"error": "Flashcard set not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def get(self, request, roadmap_uid, flashcard_uid=None):
+        if flashcard_uid is None:
+            return self.get_all_flashcards(request, roadmap_uid)
+        return self.get_specific_flashcard(request, roadmap_uid, flashcard_uid)
 
     def post(self, request, roadmap_uid):
-        roadmap = Roadmap.objects.get(uid=roadmap_uid)
-        topic = request.data["topic"]
-        data = flashcards.generate_flashcards_for_topic(topic)
-        x = FlashCardSet.objects.create(parent_roadmap=roadmap, content=data)
-        serializer = FlashCardSetSerializer(x)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            roadmap = Roadmap.objects.get(uid=roadmap_uid)
+            topic = request.data.get("topic")
+
+            if not topic:
+                return Response(
+                    {"error": "Topic is required"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            data = generate_flashcards_for_topic(topic)
+
+            # Create flashcard set
+            flashcard_set = FlashCardSet.objects.create(
+                parent_roadmap=roadmap,
+                content=data
+            )
+
+            serializer = FlashCardSetSerializer(flashcard_set)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Roadmap.DoesNotExist:
+            return Response(
+                {"error": "Roadmap not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def delete(self, request, roadmap_uid, flashcard_uid):
+        try:
+            flashcardset = FlashCardSet.objects.get(uid=flashcard_uid)
+            flashcards = Flashcard.objects.filter(set_fk=flashcardset)
+            flashcards.delete()
+            flashcardset.delete()
+            return Response({
+                "message": "Flashcard deleted successfully"
+            }, status=status.HTTP_200_OK)
+        except Flashcard.DoesNotExist:
+            return Response({
+                "error": "Flashcard not found"
+            })
+
+
+class TodoAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        todos = Todo.objects.filter(user=request.user)
+        serializer = TodoSerializer(todos, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TodoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        try:
+            # todo = Todo.objects.get(pk=pk, user=request.user)
+            # todo.delete()
+            todo = Todo.objects.all().delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Todo.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, uid):
+        try:
+            todo = Todo.objects.get(uid=uid, user=request.user)
+            todo.status = not todo.status
+            todo.save()
+            serializer = TodoSerializer(todo)  # Return updated data
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Todo.DoesNotExist:
+            return Response(
+                {"error": "Todo not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )

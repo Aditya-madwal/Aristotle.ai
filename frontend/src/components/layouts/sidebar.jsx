@@ -44,7 +44,9 @@ const Sidebar = () => {
                                 <Link
                                     to={link}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${activeTab === tab ? "text-[#7f55e0] bg-[#7f55e0] bg-opacity-20" : "text-gray-500 hover:bg-gray-100"}`}
+                                    className={`flex 
+                                        ${isSidebarOpen ? "justify-start" : "justify-center"}
+                                        items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${activeTab === tab ? "text-[#7f55e0] bg-[#7f55e0] bg-opacity-20" : "text-gray-500 hover:bg-gray-100"}`}
                                 >
                                     <span className="flex-shrink-0">
                                         {icon}
@@ -67,8 +69,8 @@ const Sidebar = () => {
                         {isSidebarOpen && (
                             <div>
                                 <p className="text-xs">
-                                    <strong className="block font-medium">Eric Frusciante</strong>
-                                    <span>eric@frusciante.com</span>
+                                    <strong className="block font-medium">{me?.username}</strong>
+                                    <span>{me?.email}</span>
                                 </p>
                             </div>
                         )}

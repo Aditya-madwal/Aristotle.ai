@@ -14,6 +14,7 @@ import api from "./lib/api/apiConfig";
 import { useNavigate } from "react-router-dom";
 import RedirectIfAuthenticated from "./lib/auth/RedirectIfAuthenticated";
 import Logout from "./lib/auth/Logout";
+import StudyAreaDashboard from "./pages/StudyArea";
 
 const RegisterAndLogout = () => {
   const navigate = useNavigate();
@@ -70,6 +71,25 @@ function App() {
             </AuthRequiringRoutes>
           }
         />
+        <Route
+          path="/hello"
+          element={
+            <AuthRequiringRoutes>
+              {/* <Home /> */}
+              <div>hello</div>
+            </AuthRequiringRoutes>
+          }
+        />
+
+        <Route
+          path="/studyarea/:uid"
+          element={
+            <AuthRequiringRoutes>
+              <StudyAreaDashboard />
+            </AuthRequiringRoutes>
+          }
+        />
+
         <Route
           path="/auth/login"
           element={
