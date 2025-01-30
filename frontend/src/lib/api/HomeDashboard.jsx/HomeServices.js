@@ -19,8 +19,17 @@ export const HomeServices = {
         } catch (error) {
             throw error;
         }
-    }
+    },
 
+    // create roadmap
+    createRoadmap: async (roadmapData) => {
+        try {
+            const response = await api.post('/api/roadmap/', roadmapData);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
 
 };
 

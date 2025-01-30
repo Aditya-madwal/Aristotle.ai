@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import authServices from "../lib/api/authServices/authservices";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +30,7 @@ const Register = () => {
     setLoading(true);
 
     if (formData.password !== formData.password2) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       setLoading(false);
       return;
     }
@@ -36,11 +38,11 @@ const Register = () => {
     try {
       const response = await authServices.register(formData);
       console.log("Registration successful:", response);
-      alert("Registration successful! Please login.");
+      toast.success("Registration successful! Please login.");
       navigate("/auth/login");
     } catch (error) {
       console.error("Registration error:", error);
-      alert(error.response?.data?.message || "Registration failed. Please try again.");
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -51,7 +53,6 @@ const Register = () => {
       <div className="lg:grid lg:grid-cols-12 lg:h-full">
         {/* Sidebar with Image */}
         <aside className="relative lg:col-span-5 xl:col-span-6 h-full hidden lg:block">
-          
           <img
             alt=""
             src="https://i.pinimg.com/736x/c3/88/80/c3888023324759ca0e60fdbb9b2a6119.jpg"
@@ -62,7 +63,14 @@ const Register = () => {
         {/* Form Section */}
         <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 overflow-y-auto">
           <div className="max-w-xl lg:max-w-3xl w-full">
-            {loading && <div className="text-center text-gray-600">Loading...</div>}
+            {loading && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white p-5 rounded-lg flex flex-col items-center">
+                  <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="mt-3 text-gray-700 font-medium">Creating your account...</p>
+                </div>
+              </div>
+            )}
 
             <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
               Create Your Account
@@ -199,9 +207,10 @@ const Register = () => {
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
                   type="submit"
-                  className="inline-block shrink-0 rounded-md border bg-[#7f55e0] px-12 py-3 text-sm font-medium text-white transition  focus:outline-none focus:ring active:text-blue-500"
+                  disabled={loading}
+                  className="inline-block shrink-0 rounded-md border border-purple-600 bg-purple-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-purple-600 focus:outline-none focus:ring active:text-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Create Account
+                  Create an account
                 </button>
 
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
@@ -209,12 +218,25 @@ const Register = () => {
                   <Link to="/auth/login" className="text-gray-700 underline">
                     Log in
                   </Link>
+                  .
                 </p>
               </div>
             </form>
           </div>
         </main>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </section>
   );
 };

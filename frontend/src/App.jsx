@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import RedirectIfAuthenticated from "./lib/auth/RedirectIfAuthenticated";
 import Logout from "./lib/auth/Logout";
 import StudyAreaDashboard from "./pages/StudyArea";
+import PDFAnalysisPage from "./pages/Pdf";
 
 const RegisterAndLogout = () => {
   const navigate = useNavigate();
@@ -86,6 +87,14 @@ function App() {
           element={
             <AuthRequiringRoutes>
               <StudyAreaDashboard />
+            </AuthRequiringRoutes>
+          }
+        />
+        <Route
+          path="studyarea/:roadmapUid/pdf/:pdfUid"
+          element={
+            <AuthRequiringRoutes>
+              <PDFAnalysisPage/>
             </AuthRequiringRoutes>
           }
         />

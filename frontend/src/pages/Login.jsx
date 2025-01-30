@@ -2,6 +2,9 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import authServices from "../lib/api/authServices/authservices";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ClipLoader } from 'react-spinners';
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -24,17 +27,18 @@ const Login = () => {
       const authResponse = await authServices.isAuthenticated();
 
       if (!authResponse.isAuthenticated) {
-        alert("Failed to authenticate user");
+        toast.error("Failed to authenticate user");
       } else {
         console.log(authResponse);
         setMe(authResponse.user);
+        toast.success("Login successful!");
       }
 
       navigate("/");
 
     } catch (error) {
       console.error("Login error:", error);
-      alert(
+      toast.error(
         error.response?.data?.message ||
         error.message ||
         "Login failed. Please try again."
@@ -59,7 +63,14 @@ const Login = () => {
         {/* Form Section */}
         <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 overflow-y-auto">
           <div className="max-w-xl lg:max-w-3xl w-full">
-            {loading && <div className="text-center text-gray-600">Loading...</div>}
+            {loading && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white p-5 rounded-lg flex flex-col items-center">
+                  <ClipLoader color="#4F46E5" size={50} />
+                  <p className="mt-3 text-gray-700">Logging in...</p>
+                </div>
+              </div>
+            )}
 
             <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
               Welcome Back 👋
@@ -153,6 +164,18 @@ const Login = () => {
           </div>
         </main>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </section>
   );
 };

@@ -12,16 +12,11 @@ const StudyAreaDashboard = () => {
     // useEffect(() => {
     //     me ? setMyinfo(me) : null;
     // }, [me]);
-    const [selectedFile, setSelectedFile] = useState({
-        id: "pdf_001",
-        name: 'UserPersona.pdf',
-        dateUploaded: 'June 23, 2024',
-        topic: 'User Persona',
-        summary: 'Comprehensive guide covering user persona creation, user research methodologies, and practical examples of implementing user personas in UX design. Includes case studies and templates for creating effective user personas.',
-    });
+    const [selectedFile, setSelectedFile] = useState({})
 
     const SidebarWithProps = () => (
         <FileSidebar
+            roadmapUid={selectedFile?.roadmapUid || ""}
             fileId={selectedFile?.id || ""}
             fileName={selectedFile?.name || "No file selected"}
             topic={selectedFile?.topic || "No topic"}

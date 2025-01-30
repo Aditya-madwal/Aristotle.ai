@@ -21,6 +21,16 @@ export const StudyAreaService = {
         }
     },
 
+    // increment milestone 
+    incrementMilestone: async (roadmapUid) => {
+        try {
+            const response = await api.put(`/api/roadmap/${roadmapUid}/update/`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     // Upload PDF to a roadmap
     uploadPDF: async (roadmapUid, pdfData) => {
         try {
@@ -32,6 +42,16 @@ export const StudyAreaService = {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Delete PDF from a roadmap
+    deletePDF: async (roadmapUid, pdfUid) => {
+        try {
+            const response = await api.delete(`/api/delete_pdf/${roadmapUid}/${pdfUid}`);
             return response.data;
         } catch (error) {
             throw error;
@@ -51,17 +71,7 @@ export const StudyAreaService = {
     // Create flashcard for a roadmap
     createFlashcard: async (roadmapUid, flashcardData) => {
         try {
-            const response = await api.post(`/api/roadmap/${roadmapUid}/flashcards/`, flashcardData);
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    // Update flashcard
-    updateFlashcard: async (roadmapUid, flashcardId, flashcardData) => {
-        try {
-            const response = await api.put(`/api/roadmap/${roadmapUid}/flashcards/${flashcardId}/`, flashcardData);
+            const response = await api.post(`/api/generate_flashcards/${roadmapUid}/`, flashcardData);
             return response.data;
         } catch (error) {
             throw error;

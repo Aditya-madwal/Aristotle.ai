@@ -11,6 +11,8 @@ urlpatterns += [
     path('roadmap/', views.RoadmapDetailView.as_view(), name='roadmap-generate'),
     path('get_all_roadmaps/', views.RoadmapDetailView.as_view(),
          name='roadmap-get-all'),
+    path('roadmap/<str:roadmap_uid>/update/',
+         views.RoadmapDetailView.as_view(), name='roadmap-update'),
 ]
 
 # pdf Urls
@@ -22,6 +24,8 @@ urlpatterns += [
     path('get_all_pdfs_for_roadmap/<slug:roadmap_uid>',
          views.PDFoperations.as_view(), name='PDF-get-all-roadmap'),
     path('get_recent_pdfs/', views.PDFoperations.as_view(), name='PDF-get-recent'),
+    path('delete_pdf/<slug:roadmap_uid>/<slug:pdf_uid>',
+         views.PDFoperations.as_view(), name='PDF-delete')
 ]
 
 # flashcard Urls

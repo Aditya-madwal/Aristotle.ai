@@ -59,7 +59,7 @@ const ConfirmationModal = ({ isOpen, onClose, files, onConfirm, isUploading }) =
 };
 
 
-const FileUpload = () => {
+const FileUpload = ({ fetchRoadmapPDFs }) => {
     const { uid } = useParams();
     const [roadmapUid, setRoadmapUid] = useState(uid);
     console.log('Rendering FileUpload component with roadmapUid:', roadmapUid);
@@ -110,6 +110,7 @@ const FileUpload = () => {
             }
             setSelectedFiles([]);
             setIsModalOpen(false);
+            fetchRoadmapPDFs();
         } catch (error) {
             console.error('Upload error:', error);
             toast.error(error.response?.data?.message || 'Failed to upload file');

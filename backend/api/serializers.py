@@ -86,7 +86,7 @@ class RoadmapSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Roadmap
-        fields = ['uid', 'subject', 'duration',
+        fields = ['uid', 'subject', 'duration','status',
                   'current_milestone', 'user', 'milestones']
 
     def get_milestones(self, obj):

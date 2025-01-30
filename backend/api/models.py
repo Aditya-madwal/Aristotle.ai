@@ -104,6 +104,7 @@ class Roadmap(models.Model):
         null=True,
         related_name='current_roadmaps'
     )
+    status = models.BooleanField(default=False)
     user = models.ForeignKey(
         CustomUser, 
         on_delete=models.CASCADE,

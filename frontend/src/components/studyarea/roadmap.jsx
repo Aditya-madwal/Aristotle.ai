@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Book, Video, Link as LinkIcon, ChevronRight } from "lucide-react";
+import StudyAreaServices from "../../lib/api/StudyAreaDashboard.jsx/StudyAreaServices"; // Import StudyAreaServices
 
-const RoadmapMilestone = ({ milestone, isCurrentMilestone }) => {
-  const handleIncrementMilestone = () => {
-    // Handle incrementing the milestone
-    alert(`Incrementing milestone: ${milestone.title}`);
-  };
-
-  console.log(milestone, isCurrentMilestone);
-
-  const [isExpanded, setIsExpanded] = useState(isCurrentMilestone);
+const RoadmapMilestone = ({
+  milestone,
+  isCurrentMilestone,
+  onComplete,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const getResourceIcon = (type) => {
     switch (type) {
       case "video":
@@ -107,7 +105,7 @@ const RoadmapMilestone = ({ milestone, isCurrentMilestone }) => {
       </button>
       {isCurrentMilestone && (
         <button
-          onClick={() => handleIncrementMilestone()}
+          onClick={onComplete}
           className={`mt-2 w-full py-1.5 px-3 rounded-full text-sm text-center transition-colors duration-200 
                     ${
                       isCurrentMilestone
@@ -115,25 +113,78 @@ const RoadmapMilestone = ({ milestone, isCurrentMilestone }) => {
                         : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                     }`}
         >
-          Completed
+          Mark as Complete
         </button>
       )}
     </div>
   );
 };
 
-const Roadmap = ({ roadmapData }) => {
+const Roadmap = ({ roadmapData, fetchRoadmapData }) => {
   if (!roadmapData) return null;
 
+  const handleIncrementMilestone = async () => {
+    try {
+      await StudyAreaServices.incrementMilestone(roadmapData.uid);
+      fetchRoadmapData();
+    } catch (error) {
+      console.error('Error incrementing milestone:', error);
+    }
+  };
+  console.log(roadmapData.status);
+
   return (
-    <div className="w-full mx-auto mb-6">
-      <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-xl font-bold">Roadmap</h2>
-        <ChevronRight className="w-5 h-5 text-gray-400" />
-        <span className="text-purple-600">{roadmapData?.subject}</span>
-        <span className="text-sm text-gray-500 ml-2">
-          ({roadmapData?.duration})
-        </span>
+    <div className="pb-10">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-bold">Roadmap</h2>
+          {/* <ChevronRight className="w-5 h-5 text-gray-400" />
+          <span className="text-purple-600">{roadmapData?.subject}</span> */}
+          <span className="text-sm text-gray-500">
+            ({roadmapData?.duration})
+          </span>
+          {roadmapData.status == true ? (
+            <span
+              className="inline-flex items-center justify-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-emerald-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="-ms-1 me-1.5 size-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p className="whitespace-nowrap text-sm">Completed</p>
+            </span>
+          ) : (
+            <span
+              className="inline-flex items-center justify-center rounded-full bg-blue-100 px-2.5 py-0.5 text-blue-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="-ms-1 me-1.5 size-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p className="whitespace-nowrap text-sm">In Progress</p>
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Fixed height scrollable container */}
@@ -145,7 +196,7 @@ const Roadmap = ({ roadmapData }) => {
           {/* Milestones */}
           <div className="space-y-8">
             {roadmapData?.milestones?.map((milestone, index) => (
-              <div key={milestone.id} className="relative pl-16">
+              <div key={milestone.uid} className="relative pl-16">
                 {/* Horizontal connector line */}
                 <div className="absolute left-8 top-1/2 w-8 h-px bg-purple-400" />
 
@@ -163,8 +214,9 @@ const Roadmap = ({ roadmapData }) => {
                 <RoadmapMilestone
                   milestone={milestone}
                   isCurrentMilestone={
-                    roadmapData.current_milestone.uid === milestone.uid
+                    roadmapData.current_milestone && roadmapData.current_milestone?.uid === milestone.uid
                   }
+                  onComplete={handleIncrementMilestone}
                 />
               </div>
             ))}

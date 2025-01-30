@@ -26,8 +26,8 @@ const TaskSidebar = () => {
     // Predefined labels with colors
     const labelOptions = [
         { id: 1, name: 'PRIORITY', color: 'bg-red-100 text-red-700' },
-        { id: 2, name: 'EXAM', color: 'bg-purple-100 text-purple-700' },
-        { id: 3, name: 'PROJECT', color: 'bg-blue-100 text-blue-700' },
+        { id: 2, name: 'WORK', color: 'bg-purple-100 text-purple-700' },
+        { id: 3, name: 'EXAM', color: 'bg-blue-100 text-blue-700' },
         { id: 4, name: 'PERSONAL', color: 'bg-green-100 text-green-700' },
     ];
 

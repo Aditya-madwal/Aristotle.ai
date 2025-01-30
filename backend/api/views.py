@@ -41,6 +41,35 @@ class showMe(APIView):
 class RoadmapDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def put(self, request, roadmap_uid):
+        try:
+            roadmap = Roadmap.objects.get(uid=roadmap_uid)
+            current_milestone = roadmap.current_milestone
+            current_milestone.status = True
+            current_milestone.save()
+            current_milestone = None
+
+            for ms in roadmap.milestones.all():
+                if ms.status == False:
+                    current_milestone = ms
+                    break
+
+            roadmap.current_milestone = current_milestone
+            if roadmap.current_milestone is None:
+                roadmap.status = True
+            roadmap.save()
+
+            return Response(
+                {"message": "Milestone completed successfully"},
+                status=status.HTTP_200_OK
+            )
+
+        except Roadmap.DoesNotExist:
+            return Response(
+                {"error": "Roadmap not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
     # Get all roadmaps
     def get_all_roadmaps(self, request):
         try:
@@ -237,6 +266,7 @@ class PDFoperations(APIView):
             return Response("messsage: PDF deleted successfully", status=status.HTTP_200_OK)
         except pdf.DoesNotExist:
             return Response("messsage: PDF not found", status=status.HTTP_404_NOT_FOUND)
+
 
 
 class Flashcard_operations(APIView):
