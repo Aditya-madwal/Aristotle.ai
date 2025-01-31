@@ -33,7 +33,7 @@ class PDFSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PDF
-        fields = ['uid', 'url', 'size', 'notes',
+        fields = ['uid', 'url', 'size', 'notes', "cid",
                   'parent_roadmap', 'user', 'date_uploaded', 'chats']
 
     def get_chats(self, obj):

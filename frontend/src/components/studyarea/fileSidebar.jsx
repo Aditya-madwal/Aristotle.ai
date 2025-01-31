@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { StudyAreaService } from "../../lib/api/StudyAreaDashboard.jsx/StudyAreaServices";
+import { useEffect } from "react";
 
 const FileSidebar = ({
   roadmapUid,
@@ -15,8 +16,16 @@ const FileSidebar = ({
   topic,
   dateUploaded,
   summary,
+  ondeletePDF,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    if (!fileId) {
+      setIsOpen(false);
+    }
+  }, []);
+
   const navigate = useNavigate();
   const [roadmapuid, setRoadmapUid] = useState(roadmapUid);
 
@@ -25,15 +34,14 @@ const FileSidebar = ({
   };
 
   const handleDeletePDF = async () => {
-    alert(roadmapUid)
-    alert(fileId)
-    // try {
-    //   await StudyAreaService.deletePDF(roadmapUid, fileId);
-    //   // Navigate back to the roadmap page after successful deletion
-    //   navigate(`/studyarea/${roadmapUid}`);
-    // } catch (error) {
-    //   console.error("Error deleting PDF:", error);
-    // }
+    try {
+      await StudyAreaService.deletePDF(roadmapUid, fileId);
+      // Navigate back to the roadmap page after successful deletion
+      setIsOpen(false);
+      navigate(`/studyarea/${roadmapUid}`);
+    } catch (error) {
+      console.error("Error deleting PDF:", error);
+    }
   };
 
   return (

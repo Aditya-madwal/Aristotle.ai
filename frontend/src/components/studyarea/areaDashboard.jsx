@@ -93,11 +93,15 @@ const AreaDashboard = ({ setSelectedFile }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const ondeletePDF = () => {
+    fetchData();
+  };
+
   const handleDeletePDF = async (pdfUid) => {
     try {
       await StudyAreaService.deletePDF(roadmapUid, pdfUid);
       // Refresh the PDFs list after successful deletion
-      fetchData();
+      ondeletePDF();
     } catch (error) {
       console.error("Error deleting PDF:", error);
     }

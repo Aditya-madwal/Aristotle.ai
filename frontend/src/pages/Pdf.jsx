@@ -1,192 +1,326 @@
-import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from "framer-motion";
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
-// Header Component
-const Header = () => {
-  return (
-    <div className="flex justify-between items-center p-4 bg-white">
-      <button className="flex items-center gap-2 text-purple-600 px-4 py-2 rounded-lg bg-purple-100">
-        <ArrowLeft size={20} />
-        <span>Back to Dashboard</span>
-      </button>
-      <div className="text-xl font-semibold">Aristotle</div>
-      <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200">
-        <span>Download summary</span>
-      </button>
-    </div>
-  );
+import { PdfServices } from '../lib/api/PdfServices/pdfServices';
+
+// Sample Data
+const SAMPLE_DATA = {
+  document: {
+    id: '124',
+    title: 'Sample Document',
+    pdfUrl: 'https://ipfs.io/ipfs/QmZzDZkU2pQkzMeQ3tKuZKPR2jD5GR5hyjyLuenTWX321h'
+  },
+  summary: {
+    mainPoints: [
+      'Exercitation laborum adipisicing excepteur proident ex commodo exercitation ut ex.',
+      'Veniam nisi sit minim elit dolore officia.',
+      'Enim deserunt elit proident ipsum incididunt officia nostrud dolor.'
+    ],
+    keyFindings: `Excepteur aute adipisicing commodo cillum Lorem elit laborum eu exercitation fugiat. 
+      Aliqua Lorem laboris amet minim sint occaecat in eu.`
+  },
+  chat: {
+    messages: [
+      {
+        id: 1,
+        sender: 'assistant',
+        content: 'Do fugiat commodo veniam ut ad commodo minim ipsum proident quis deserunt.'
+      },
+      {
+        id: 2,
+        sender: 'user',
+        content: 'Nostrud reprehenderit incididunt minim ea cupidatat eu ut exercitation?'
+      }
+    ]
+  }
 };
 
-// PDF Viewer Component
-const PDFViewer = () => {
-  return (
-    <div className="bg-gray-100 p-6 rounded-lg">
-      <div className="bg-white p-6 rounded-lg shadow-sm min-h-[600px] w-full">
-        {/* PDF content would be rendered here using a PDF library */}
-        <h2 className="text-lg font-semibold mb-4">Sample file #124</h2>
-        <p className="text-gray-700 mb-4">
-          Quis esse cillum pariatur id veniam officia consequat ea qui...
-        </p>
-      </div>
-    </div>
-  );
-};
 
-// Analysis Report Component
-const AnalysisReport = () => {
+// Main Component
+const PdfPage = () => {
+  const [activeTab, setActiveTab] = useState('summary');
+  const [pdfData, setPdfData] = useState(null);
+  const [chatData, setChatData] = useState(null);
+  const [cid, setCid] = useState(null);
+
+  const { roadmapUid, pdfUid } = useParams();
+  // console.log(roadmapUid, pdfUid);
+
+  useEffect(() => {
+    fetchPdfData();
+  }, [roadmapUid, pdfUid]);
+
+  const fetchPdfData = async () => {
+    try {
+      const data = await PdfServices.getPDFData(roadmapUid, pdfUid);
+      setPdfData(data);
+      setCid(data.cid);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className="bg-white p-6 rounded-lg">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold">Sample file #124</h2>
-        <button className="text-gray-400 hover:text-gray-600">&times;</button>
-      </div>
-      
-      <div className="border-b mb-6">
-        <div className="flex gap-6 mb-4">
-          <button className="text-purple-600 border-b-2 border-purple-600 pb-2">
-            Summary
-          </button>
-          <button className="text-gray-500 pb-2">
-            Chat
-          </button>
+    <div className="h-screen w-full flex flex-col bg-gray-50">
+      <Header title={"Aristotle.ai"} />
+
+      <div className="flex flex-1 overflow-hidden">
+        <PDFPreview cid={cid} />
+
+        <div className="w-1/2">
+          <div className="bg-white h-full flex flex-col shadow-sm border-l">
+            <TabNavigation 
+              activeTab={activeTab} 
+              onTabChange={setActiveTab} 
+            />
+
+            <div className="flex-1 overflow-y-auto">
+              {activeTab === 'summary' ? (
+                <Summary notes={pdfData?.notes} />
+              ) : (
+                <Chat messages={SAMPLE_DATA.chat.messages} />
+              )}
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="space-y-6">
-        <section>
-          <h3 className="text-purple-600 mb-4">Summary</h3>
-          <p className="text-gray-700 mb-4">
-            Excepteur aute adipisicing commodo cillum Lorem elit laborum...
-          </p>
-        </section>
-
-        <section>
-          <h3 className="text-purple-600 mb-4">Points to be noted</h3>
-          <ul className="space-y-4 text-gray-700">
-            <li>Exercitation laborum adipisicing excepteur proident ex commodo...</li>
-            <li>Enim deserunt elit proident ipsum...</li>
-          </ul>
-        </section>
-      </div>
     </div>
   );
 };
 
-import { Send, Info, X, Star } from 'lucide-react';
-
-const ChatMessage = ({ isUser, message, sender }) => {
-  return (
-    <div className="mb-6">
-      <div className="text-sm text-gray-600 mb-2">{sender}</div>
-      <div className={`p-4 rounded-lg ${isUser ? 'bg-white' : 'bg-purple-50'}`}>
-        <p className="text-gray-800">{message}</p>
-      </div>
+// Header Component
+const Header = ({ title }) => (
+  <header className="flex items-center justify-between p-4 bg-white border-b">
+    <div className="flex items-center gap-4">
+      <button className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-md text-sm">
+        <ChevronLeft size={16} />
+        Back to Dashboard
+      </button>
     </div>
-  );
-};
+    <h1 className="text-lg font-semibold">{title}</h1>
+    <div className="flex items-center gap-4">
+      <button className="px-4 py-2 border rounded-md flex items-center gap-2 text-sm">
+        Download summary
+      </button>
+      <button className="p-2 text-sm">
+        <span className="sr-only">Help</span>
+        ?
+      </button>
+    </div>
+  </header>
+);
 
-const ChatComponent = () => {
-  const [message, setMessage] = useState('');
-  const [messages] = useState([
-    {
-      sender: 'genaiedu',
-      message: 'Do fugiat commodo veniam ut ad commodo minim ipsum proident quis deserunt. Labore aliquip ullamco consequat velit aliquip duis elit cupidatat sit nostrud aliqua et est minim eiusmod elit. Consequat reprehenderit ipsum aliqua cillum qui dolore fugiat i',
-      isUser: false
-    },
-    {
-      sender: 'You',
-      message: 'Nostrud reprehenderit incididunt minim ea cupidatat eu ut exercitation reprehenderit ad consequat amet labore Lorem anim occaecat. Pariatur non exercitation non reprehenderit adipisicing ad esse laborum adipisicing eu in incididunt officia ?',
-      isUser: true
-    },
-    {
-      sender: 'genaiedu',
-      message: 'Do fugiat commodo veniam ut ad commodo minim ipsum proident quis deserunt. Labore aliquip ullamco consequat velit aliquip duis elit cupidatat sit nostrud aliqua et est minim eiusmod elit. Consequat reprehenderit ipsum aliqua cillum qui dolore fugiat i',
-      isUser: false
-    },
-    {
-      sender: 'You',
-      message: 'Nostrud reprehenderit incididunt minim ea cupidatat eu ut exercitation reprehenderit ad consequat amet labore Lorem anim occaecat. Pariatur non exercitation non reprehenderit adipisicing ad esse laborum adipisicing eu in incididunt officia ?',
-      isUser: true
-    }
-  ]);
+// PDF Preview Component
+const PDFPreview = ({ cid }) => (
+  <div className="w-1/2 p-4 overflow-hidden">
+    <div className="bg-white rounded-lg h-full shadow-sm border overflow-hidden">
+      <iframe
+        src={`https://ipfs.io/ipfs/${cid}`}
+        title="PDF Preview"
+        className="w-full h-full border-0"
+      />
+    </div>
+  </div>
+);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    // Add message handling logic here
-    setMessage('');
+const Summary = ({ notes }) => {
+  const [expandedSection, setExpandedSection] = useState(null);
+
+  const toggleSection = (index) => {
+    setExpandedSection(expandedSection === index ? null : index);
   };
 
   return (
-    <div className="bg-white rounded-lg h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-2">
-          <span className="text-gray-700">Sample file #124</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Star className="text-yellow-400 cursor-pointer" size={20} />
-          <X className="text-gray-400 cursor-pointer" size={20} />
-        </div>
-      </div>
+    <div className="p-6 overflow-y-auto">
+      {/* Title and Overview */}
+      <h2 className="text-base font-semibold mb-2">{notes?.title}</h2>
+      <p className="text-gray-600 text-sm mb-6">{notes?.overview}</p>
 
-      {/* Tab Navigation */}
-      <div className="border-b">
-        <div className="flex gap-6 px-4">
-          <button className="py-2 text-gray-500">Summary</button>
-          <button className="py-2 text-purple-600 border-b-2 border-purple-600">
-            Chat
-          </button>
-        </div>
-      </div>
+      {/* Main Summary */}
+      <h3 className="text-purple-600 text-sm font-medium mb-4">Summary</h3>
+      <p className="text-gray-600 text-sm mb-6">{notes?.summary}</p>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, index) => (
-          <ChatMessage
+      {/* Sections */}
+      <h3 className="text-purple-600 text-sm font-medium mb-4">Sections</h3>
+      <div className="space-y-4">
+        {notes?.sections?.map((section, index) => (
+          <div
             key={index}
-            message={msg.message}
-            sender={msg.sender}
-            isUser={msg.isUser}
-          />
+            className="border rounded-lg p-4 bg-white hover:shadow-sm transition-shadow"
+          >
+            <button
+              onClick={() => toggleSection(index)}
+              className="w-full text-left flex justify-between items-center"
+            >
+              <h4 className="text-sm font-medium">{section.title}</h4>
+              <motion.span
+                initial={{ rotate: 0 }}
+                animate={{ rotate: expandedSection === index ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-purple-600"
+              >
+                <ChevronDown size={16} />
+              </motion.span>
+            </button>
+
+            <AnimatePresence>
+              {expandedSection === index && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.1, ease: "easeInOut" }}
+                  className="mt-4 space-y-4 overflow-hidden"
+                >
+                  {/* Section Summary */}
+                  {section?.summary && section.summary.trim() !== "" && (
+                    <p className="text-sm text-gray-600">{section.summary}</p>
+                  )}
+
+                  {/* Key Points */}
+                  {section?.key_points?.length > 0 && (
+                    <div>
+                      <h5 className="text-sm font-medium text-purple-600 mb-2">
+                        Key Points
+                      </h5>
+                      <ul className="list-disc pl-4 text-sm text-gray-600 space-y-1">
+                        {section.key_points
+                          .filter((point) => point && point.trim() !== "")
+                          .map((point, idx) => (
+                            <li key={idx}>{point}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Details */}
+                  {section?.details?.length > 0 && (
+                    <div>
+                      <h5 className="text-sm font-medium text-purple-600 mb-2">
+                        Details
+                      </h5>
+                      <ul className="list-disc pl-4 text-sm text-gray-600 space-y-1">
+                        {section.details
+                          .filter((detail) => detail && detail.trim() !== "")
+                          .map((detail, idx) => (
+                            <li key={idx}>{detail}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         ))}
       </div>
 
-      {/* Input Area */}
-      <form onSubmit={handleSubmit} className="p-4 border-t">
-        <div className="relative">
+      {/* Key Terms */}
+      <h3 className="text-purple-600 text-sm font-medium mt-6 mb-4">
+        Key Terms
+      </h3>
+      <div className="grid grid-cols-1 gap-4">
+        {Object.entries(notes?.key_terms || {}).map(([term, definition], index) => (
+          <div key={index} className="border rounded-lg p-3 bg-white">
+            <span className="text-sm font-medium">{term}: </span>
+            <span className="text-sm text-gray-600">{definition}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Review Questions */}
+      <h3 className="text-purple-600 text-sm font-medium mt-6 mb-4">
+        Review Questions
+      </h3>
+      <ul className="list-decimal pl-4 space-y-2">
+        {notes?.review_questions?.map((question, index) => (
+          <li key={index} className="text-sm text-gray-600">{question}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+
+// Chat Message Component
+const ChatMessage = ({ message }) => (
+  <div className={`${message.sender === 'assistant' ? 'bg-purple-50' : 'border'} p-4 rounded-lg`}>
+    <p className="text-xs text-gray-600 mb-1">
+      {message.sender === 'assistant' ? 'Assistant' : 'You'}
+    </p>
+    <p className="text-sm">{message.content}</p>
+  </div>
+);
+
+// Chat Component
+const Chat = ({ messages }) => {
+  const [message, setMessage] = useState('');
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="space-y-4">
+          {messages.map((msg) => (
+            <ChatMessage key={msg.id} message={msg} />
+          ))}
+        </div>
+      </div>
+      
+      <div className="p-4 border-t bg-white">
+        <div className="flex items-center gap-2">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your question here..."
-            className="w-full px-4 py-3 bg-purple-50 rounded-lg pr-12 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
           />
-          <button
-            type="submit"
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-600"
-          >
-            <Send size={20} />
+          <button className="p-2 text-purple-600">
+            <span className="sr-only">Send message</span>
+            →
           </button>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-// Main Page Component
-const PDFAnalysisPage = () => {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-2 gap-6">
-          <PDFViewer />
-          <AnalysisReport />
         </div>
       </div>
     </div>
   );
 };
 
-export default PDFAnalysisPage;
+// tab navigation component
+const TabNavigation = ({ activeTab, onTabChange }) => {
+  const tabs = ["summary", "chat"];
+
+  return (
+    <div className="border-b bg-white">
+      <div className="flex gap-8 px-6 relative">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            className={`relative py-4 px-2 text-sm transition-colors duration-300 ${
+              activeTab === tab
+                ? "text-purple-600 font-medium"
+                : "text-gray-500 hover:text-purple-500"
+            }`}
+            onClick={() => onTabChange(tab)}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+
+            {/* Animated Underline */}
+            {activeTab === tab && (
+              <motion.div
+                layoutId="underline"
+                className="absolute left-0 bottom-0 h-[2px] bg-purple-600 w-full"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PdfPage;

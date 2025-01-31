@@ -24,6 +24,9 @@ from django.utils.decorators import method_decorator
 from .gemini_logic import pdf_summarize, roadmap, flashcards
 from .gemini_logic.roadmap import generate_roadmap_data
 from .gemini_logic.flashcards import FlashcardsSet, generate_flashcards_for_topic
+import random
+
+from .ipfs_logic.ipfsServices import IPFSService
 
 from dotenv import load_dotenv
 import os
@@ -178,27 +181,40 @@ class PDFoperations(APIView):
             # Initialize the generator
             generator = pdf_summarize.PDFNotesGenerator(api_key=GOOGLE_API_KEY)
 
-            # Generate notes from the uploaded PDF
+           # Generate notes from the uploaded PDF
             notes_result = generator.generate_notes(pdf_file)
+
+            # Reset file pointer to the beginning
+            pdf_file.seek(0)
+
+            # Upload file to IPFS
+            random_id = ''.join([str(random.randint(0, 9)) for _ in range(9)])
+            ipfs_service = IPFSService()
+            cid = ipfs_service.upload_file(file=pdf_file, filename=random_id)
 
             # Create a PDF instance in the database
             pdf_instance = PDF.objects.create(
-                url=pdf_file,
+                url=pdf_file.name,
                 size=pdf_file.size / 1024,  # File size in KB
-                user=self.request.user,
+                user=request.user,
                 notes=notes_result,
+                cid=cid,
                 parent_roadmap=parent_roadmap
             )
 
-            # Return the generated notes as a response
+            # print(ipfs_service.get_file_metadata(pdf_instance.cid))
+
+            # Return response
             return JsonResponse({
                 "message": "Notes generated successfully",
                 "pdf_uid": pdf_instance.uid,
-                "notes": notes_result
+                "notes": notes_result,
+                "cid": cid
             }, status=200)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
 
     # Get all PDFs related to the user and roadmap
     def get_all_pdfs_for_roadmap(self, request, roadmap_uid):

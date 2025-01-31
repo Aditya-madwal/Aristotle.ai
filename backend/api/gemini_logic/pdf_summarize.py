@@ -103,6 +103,11 @@ class PDFNotesGenerator:
         Create comprehensive yet concise notes. Include relevant examples where possible.
         Generate thought-provoking review questions that test understanding.
         Identify and define important terminology in the key_terms section.
+
+        ### Output Format:
+        Ensure the response is a **valid JSON object** with proper escaping for special characters.
+        Wrap any **quotes inside strings with `\\` (backslashes)** to prevent JSON errors.
+        If a section has no data, return an empty string `""`, not `null` or missing fields.
         """
 
     def generate_notes(self,

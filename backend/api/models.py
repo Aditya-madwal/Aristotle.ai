@@ -203,6 +203,7 @@ class PDF(models.Model):
         default=generate_unique_uid,
         editable=False
     )
+    cid = models.CharField(max_length=100, null=True, blank=True)
     url = models.FileField(upload_to="pdfs", max_length=100)
     size = models.IntegerField()
     notes = models.JSONField(default=dict)
