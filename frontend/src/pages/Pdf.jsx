@@ -1,47 +1,49 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronDown } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronLeft, ChevronDown, Plus, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
-import { PdfServices } from '../lib/api/PdfServices/pdfServices';
+import { PdfServices } from "../lib/api/PdfServices/pdfServices";
 
 // Sample Data
 const SAMPLE_DATA = {
   document: {
-    id: '124',
-    title: 'Sample Document',
-    pdfUrl: 'https://ipfs.io/ipfs/QmZzDZkU2pQkzMeQ3tKuZKPR2jD5GR5hyjyLuenTWX321h'
+    id: "124",
+    title: "Sample Document",
+    pdfUrl:
+      "https://ipfs.io/ipfs/QmZzDZkU2pQkzMeQ3tKuZKPR2jD5GR5hyjyLuenTWX321h",
   },
   summary: {
     mainPoints: [
-      'Exercitation laborum adipisicing excepteur proident ex commodo exercitation ut ex.',
-      'Veniam nisi sit minim elit dolore officia.',
-      'Enim deserunt elit proident ipsum incididunt officia nostrud dolor.'
+      "Exercitation laborum adipisicing excepteur proident ex commodo exercitation ut ex.",
+      "Veniam nisi sit minim elit dolore officia.",
+      "Enim deserunt elit proident ipsum incididunt officia nostrud dolor.",
     ],
     keyFindings: `Excepteur aute adipisicing commodo cillum Lorem elit laborum eu exercitation fugiat. 
-      Aliqua Lorem laboris amet minim sint occaecat in eu.`
+      Aliqua Lorem laboris amet minim sint occaecat in eu.`,
   },
   chat: {
     messages: [
       {
         id: 1,
-        sender: 'assistant',
-        content: 'Do fugiat commodo veniam ut ad commodo minim ipsum proident quis deserunt.'
+        sender: "assistant",
+        content:
+          "Do fugiat commodo veniam ut ad commodo minim ipsum proident quis deserunt.",
       },
       {
         id: 2,
-        sender: 'user',
-        content: 'Nostrud reprehenderit incididunt minim ea cupidatat eu ut exercitation?'
-      }
-    ]
-  }
+        sender: "user",
+        content:
+          "Nostrud reprehenderit incididunt minim ea cupidatat eu ut exercitation?",
+      },
+    ],
+  },
 };
-
 
 // Main Component
 const PdfPage = () => {
-  const [activeTab, setActiveTab] = useState('summary');
+  const [activeTab, setActiveTab] = useState("summary");
   const [pdfData, setPdfData] = useState(null);
   const [chatData, setChatData] = useState(null);
   const [cid, setCid] = useState(null);
@@ -62,7 +64,7 @@ const PdfPage = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className="h-screen w-full flex flex-col bg-gray-50">
@@ -73,13 +75,10 @@ const PdfPage = () => {
 
         <div className="w-1/2">
           <div className="bg-white h-full flex flex-col shadow-sm border-l">
-            <TabNavigation 
-              activeTab={activeTab} 
-              onTabChange={setActiveTab} 
-            />
+            <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
             <div className="flex-1 overflow-y-auto">
-              {activeTab === 'summary' ? (
+              {activeTab === "summary" ? (
                 <Summary notes={pdfData?.notes} />
               ) : (
                 <Chat messages={SAMPLE_DATA.chat.messages} />
@@ -107,8 +106,7 @@ const Header = ({ title }) => (
         Download summary
       </button>
       <button className="p-2 text-sm">
-        <span className="sr-only">Help</span>
-        ?
+        <span className="sr-only">Help</span>?
       </button>
     </div>
   </header>
@@ -224,12 +222,14 @@ const Summary = ({ notes }) => {
         Key Terms
       </h3>
       <div className="grid grid-cols-1 gap-4">
-        {Object.entries(notes?.key_terms || {}).map(([term, definition], index) => (
-          <div key={index} className="border rounded-lg p-3 bg-white">
-            <span className="text-sm font-medium">{term}: </span>
-            <span className="text-sm text-gray-600">{definition}</span>
-          </div>
-        ))}
+        {Object.entries(notes?.key_terms || {}).map(
+          ([term, definition], index) => (
+            <div key={index} className="border rounded-lg p-3 bg-white">
+              <span className="text-sm font-medium">{term}: </span>
+              <span className="text-sm text-gray-600">{definition}</span>
+            </div>
+          )
+        )}
       </div>
 
       {/* Review Questions */}
@@ -238,19 +238,24 @@ const Summary = ({ notes }) => {
       </h3>
       <ul className="list-decimal pl-4 space-y-2">
         {notes?.review_questions?.map((question, index) => (
-          <li key={index} className="text-sm text-gray-600">{question}</li>
+          <li key={index} className="text-sm text-gray-600">
+            {question}
+          </li>
         ))}
       </ul>
     </div>
   );
 };
 
-
 // Chat Message Component
 const ChatMessage = ({ message }) => (
-  <div className={`${message.sender === 'assistant' ? 'bg-purple-50' : 'border'} p-4 rounded-lg`}>
+  <div
+    className={`${
+      message.sender === "assistant" ? "bg-purple-50" : "border"
+    } p-4 rounded-lg`}
+  >
     <p className="text-xs text-gray-600 mb-1">
-      {message.sender === 'assistant' ? 'Assistant' : 'You'}
+      {message.sender === "assistant" ? "Assistant" : "You"}
     </p>
     <p className="text-sm">{message.content}</p>
   </div>
@@ -258,7 +263,7 @@ const ChatMessage = ({ message }) => (
 
 // Chat Component
 const Chat = ({ messages }) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   return (
     <div className="flex flex-col h-full">
@@ -269,22 +274,27 @@ const Chat = ({ messages }) => {
           ))}
         </div>
       </div>
-      
-      <div className="p-4 border-t bg-white">
-        <div className="flex items-center gap-2">
+      {/* chat input */}
+      <section className="flex items-center justify-center">
+        <div className="relative w-[95%] m-4">
           <input
             type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type your question here..."
-            className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+            placeholder="Add New Task..."
+            className="rounded-full pe-15 shadow-sm sm:text-sm p-4"
+            style={{
+              // backgroundColor: "rgba(250, 245, 255, 0.2)",
+              backgroundColor: "rgba(128, 0, 128, 0.1)",
+              border: "0px",
+              padding: "1.5rem",
+              borderRadius: "1000px",
+              color: "black",
+            }}
           />
-          <button className="p-2 text-purple-600">
-            <span className="sr-only">Send message</span>
-            →
+          <button className="absolute inset-y-0 end-0 grid w-10 place-content-center text-[#EFB034] pr-4">
+            <Send className="text-purple-500" />
           </button>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

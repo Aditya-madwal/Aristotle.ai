@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FolderOpen, MoreVertical, Plus, FileText, Trash2, X } from "lucide-react";
+import {
+  FolderOpen,
+  MoreVertical,
+  Plus,
+  FileText,
+  Trash2,
+  X,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import HomeServices from "../../lib/api/HomeDashboard.jsx/HomeServices";
 import StudyAreaService from "../../lib/api/StudyAreaDashboard.jsx/StudyAreaServices";
@@ -10,12 +17,12 @@ const CreateRoadmapModal = () => {
   const [formData, setFormData] = useState({
     topic: "",
     duration: "",
-    difficulty: "beginner"
+    difficulty: "beginner",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -55,7 +62,7 @@ const CreateRoadmapModal = () => {
                 <Plus className="text-orange-400" size={24} />
                 <h2 className="text-xl font-semibold">New Study Area</h2>
               </div>
-              <button 
+              <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -67,15 +74,13 @@ const CreateRoadmapModal = () => {
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* Topic */}
               <div className="space-y-2">
-                <label className="block text-gray-700 font-medium">
-                  Topic
-                </label>
+                <label className="block text-gray-700 font-medium">Topic</label>
                 <input
                   type="text"
                   name="topic"
                   value={formData.topic}
                   onChange={handleChange}
-                  style={{ height: '40px', borderRadius: '8px' }}
+                  style={{ height: "40px", borderRadius: "8px" }}
                   placeholder="e.g. Web Development"
                   className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
@@ -92,7 +97,7 @@ const CreateRoadmapModal = () => {
                   value={formData.duration}
                   onChange={handleChange}
                   placeholder="e.g. 3 months"
-                  style={{ height: '40px', borderRadius: '8px' }}
+                  style={{ height: "40px", borderRadius: "8px" }}
                   className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
@@ -103,7 +108,7 @@ const CreateRoadmapModal = () => {
                   Difficulty
                 </label>
                 <div className="space-y-2">
-                  {['beginner', 'intermediate', 'expert'].map((level) => (
+                  {["beginner", "intermediate", "expert"].map((level) => (
                     <label key={level} className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -113,9 +118,7 @@ const CreateRoadmapModal = () => {
                         onChange={handleChange}
                         className="w-4 h-4 text-purple-600 focus:ring-purple-500"
                       />
-                      <span className="text-gray-700 capitalize">
-                        {level}
-                      </span>
+                      <span className="text-gray-700 capitalize">{level}</span>
                     </label>
                   ))}
                 </div>
@@ -169,7 +172,6 @@ const StudyDashboard = () => {
     }
   };
 
-
   const handleDeletePDF = async (roadmapUid, pdfUid) => {
     try {
       await StudyAreaService.deletePDF(roadmapUid, pdfUid);
@@ -220,7 +222,6 @@ const StudyDashboard = () => {
                     {area.subject}
                   </span>
                 </Link>
-             
               </div>
               <div className="text-xs text-gray-500">
                 Duration: {area.duration}
@@ -272,62 +273,58 @@ const StudyDashboard = () => {
         </div>
       </div>
 
-  
-      
-        {/* Recent PDFs */}
-        <div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Your Roadmap PDFs
-          </h2>
-          <div className="bg-gray-50 rounded-lg overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-4 px-6 py-3 bg-gray-50 text-sm font-medium text-gray-500">
-              <div className="col-span-2">Name</div>
-              <div>Uploaded On</div>
-              <div>Overview</div>
-            </div>
+      {/* Recent PDFs */}
+      <div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Your Roadmap PDFs
+        </h2>
+        <div className="bg-gray-50 rounded-lg overflow-hidden">
+          {/* Table Header */}
+          <div className="grid grid-cols-4 px-6 py-3 bg-gray-50 text-sm font-medium text-gray-500">
+            <div className="col-span-2">Name</div>
+            <div>Uploaded On</div>
+            <div>Overview</div>
+          </div>
 
-            {/* Table Body */}
-            <div className="divide-y divide-gray-200 bg-white">
-              {recentPDFs.map((pdf) => (
-                <div
-                  key={pdf.uid}
-                  className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4">
-                  {/* File Icon & Name (Span 5 columns) */}
-                  <div className="col-span-5 flex items-center gap-3">
-                    <FileText
-                      className="text-red-400 flex-shrink-0"
-                      size={20}
-                    />
-                    <div className="text-sm text-align-left font-medium text-gray-700 hover:text-purple-600 break-words whitespace-normal overflow-hidden">
-                      <Link
-                        to={`/studyarea/${pdf.parent_roadmap}/${pdf.uid}`}>
-                        {pdf.notes.title}
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Date (Span 3 columns) */}
-                  <div className="col-span-3 text-sm text-gray-500">
-                    {formatDate(pdf.date_uploaded)}
-                  </div>
-
-                  {/* Section Label & Delete Button (Span 4 columns, ensuring button is visible) */}
-                  <div className="col-span-4 flex items-center justify-between">
-                    <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-600 text-xs truncate">
-                      {pdf.notes.overview}
-                    </span>
-                    <button
-                      onClick={() => handleDeletePDF(pdf.parent_roadmap, pdf.uid)}
-                      className="text-gray-400 hover:text-red-500 flex-shrink-0">
-                      <Trash2 size={18} />
-                    </button>
+          {/* Table Body */}
+          <div className="divide-y divide-gray-200 bg-white">
+            {recentPDFs.map((pdf) => (
+              <div
+                key={pdf.uid}
+                className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4"
+              >
+                {/* File Icon & Name (Span 5 columns) */}
+                <div className="col-span-5 flex items-center gap-3">
+                  <FileText className="text-red-400 flex-shrink-0" size={20} />
+                  <div className="text-sm text-align-left font-medium text-gray-700 hover:text-purple-600 break-words whitespace-normal overflow-hidden">
+                    <Link to={`/studyarea/${pdf.parent_roadmap}/${pdf.uid}`}>
+                      {pdf.notes.title}
+                    </Link>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Date (Span 3 columns) */}
+                <div className="col-span-3 text-sm text-gray-500">
+                  {formatDate(pdf.date_uploaded)}
+                </div>
+
+                {/* Section Label & Delete Button (Span 4 columns, ensuring button is visible) */}
+                <div className="col-span-4 flex items-center justify-between">
+                  <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-600 text-xs truncate">
+                    {pdf.notes.overview}
+                  </span>
+                  <button
+                    onClick={() => handleDeletePDF(pdf.parent_roadmap, pdf.uid)}
+                    className="text-gray-400 hover:text-red-500 flex-shrink-0"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      </div>
     </div>
   );
 };

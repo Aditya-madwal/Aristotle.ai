@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
     "react-hot-toast": "^2.5.1",
     "react-spinners": "^0.15.0",
     "react-toastify": "^11.0.3"

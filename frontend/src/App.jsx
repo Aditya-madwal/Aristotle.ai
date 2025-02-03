@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Page404 from "./pages/Page404";
+import Schedule from "./pages/Schedule";
 import AuthRequiringRoutes from "./lib/auth/Authrequired";
 import { ACCESS_TOKEN } from "./lib/api/constants";
 import { useContext } from "react";
@@ -73,15 +74,13 @@ function App() {
           }
         />
         <Route
-          path="/hello"
+          path="/schedule"
           element={
             <AuthRequiringRoutes>
-              {/* <Home /> */}
-              <div>hello</div>
+              <Schedule />
             </AuthRequiringRoutes>
           }
         />
-
         <Route
           path="/studyarea/:uid"
           element={
@@ -94,7 +93,7 @@ function App() {
           path="studyarea/:roadmapUid/pdf/:pdfUid"
           element={
             <AuthRequiringRoutes>
-              <PDFAnalysisPage/>
+              <PDFAnalysisPage />
             </AuthRequiringRoutes>
           }
         />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Plus,
   ArrowLeftFromLine,
@@ -18,13 +18,17 @@ const FileSidebar = ({
   summary,
   ondeletePDF,
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [fileid, setFileId] = useState(fileId || null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const prevFileIdRef = useRef(null); // Ref to store the previous fileId
 
   useEffect(() => {
-    if (!fileId) {
-      setIsOpen(false);
+    if (fileid && prevFileIdRef.current === null) {
+      setIsOpen(true);
     }
-  }, []);
+    prevFileIdRef.current = fileid; // Update the ref with the current fileId
+  }, [fileid]);
 
   const navigate = useNavigate();
   const [roadmapuid, setRoadmapUid] = useState(roadmapUid);
