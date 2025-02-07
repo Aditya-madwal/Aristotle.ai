@@ -80,21 +80,33 @@ const FileSidebar = ({
             {/* File Details Content */}
             <div className="space-y-4">
               <div className="flex justify-between items-start gap-2">
-                <span className="text-gray-500 text-sm font-medium">File Name</span>
-                <span className="text-sm break-words text-right max-w-[60%] font-medium">{fileName}</span>
+                <span className="text-gray-500 text-sm font-medium">
+                  File Name
+                </span>
+                <span className="text-sm break-words text-right max-w-[60%] font-medium">
+                  {fileName}
+                </span>
               </div>
               <div className="flex justify-between items-start gap-2">
                 <span className="text-gray-500 text-sm font-medium">Topic</span>
-                <span className="text-sm break-words text-right max-w-[60%] font-medium">{topic}</span>
+                <span className="text-sm break-words text-right max-w-[60%] font-medium">
+                  {topic}
+                </span>
               </div>
               <div className="flex justify-between items-start gap-2">
-                <span className="text-gray-500 text-sm font-medium">Date Uploaded</span>
-                <span className="text-sm text-right font-medium">{dateUploaded}</span>
+                <span className="text-gray-500 text-sm font-medium">
+                  Date Uploaded
+                </span>
+                <span className="text-sm text-right font-medium">
+                  {dateUploaded}
+                </span>
               </div>
 
               {/* Summary Section */}
               <div className="bg-amber-50 p-3 rounded-lg">
-                <h3 className="text-orange-400 text-sm font-medium mb-2">Summary</h3>
+                <h3 className="text-orange-400 text-sm font-medium mb-2">
+                  Summary
+                </h3>
                 <p className="text-xs text-black whitespace-pre-wrap break-words">
                   {summary || "No summary available"}
                 </p>
@@ -107,7 +119,7 @@ const FileSidebar = ({
             <div className="flex justify-center items-center w-full bg-purple-600 text-white text-sm py-2.5 rounded-full mb-2 hover:bg-purple-700 transition-colors">
               <Link to={`pdf/${fileId}`}>Open File</Link>
             </div>
-            <button 
+            <button
               onClick={handleDeletePDF}
               className="w-full border border-pink-500 text-pink-500 text-sm py-2.5 rounded-full hover:bg-pink-50 transition-colors"
             >

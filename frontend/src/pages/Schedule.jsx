@@ -9,36 +9,29 @@ import ScheduleDashboard from "../components/schedule/ScheduleDashboard";
 const Schedule = () => {
   const { me, setMe } = useContext(MyContext);
   const [myinfo, setMyinfo] = useState(me);
+
   useEffect(() => {
     me ? setMyinfo(me) : null;
   }, [me]);
 
-  const eventData = {
-    eventTitle: "Complete the task#12",
-    date: "13 May, 2024",
-    colorHex: "#00FF00", // Green color
-    categoryName: "Task",
-    description:
-      "Quis proident adipiscing sunt proident dolor et dolore proident fugiat ad nulla incididunt qui.",
-    eventUid: "event-123",
-  };
+  const [eventProps, setEventProps] = useState(null);
 
   const EventSidebarWithProps = () => (
     <EventSidebar
-      eventTitle={eventData.eventTitle}
-      date={eventData.date}
-      colorHex={eventData.colorHex}
-      categoryName={eventData.categoryName}
-      description={eventData.description}
-      eventUid={eventData.eventUid}
+      eventTitle={eventProps?.eventTitle}
+      date={eventProps?.date}
+      colorHex={eventProps?.colorHex}
+      categoryName={eventProps?.categoryName}
+      description={eventProps?.description}
+      uid={eventProps?.uid}
     />
   );
 
   return (
     <>
-      <DefaultLayout RightSidebar={EventSidebarWithProps}>
+      <DefaultLayout RightSidebar={EventSidebarWithProps} active="Schedule">
         <div className="p-6 bg-gray-100 min-h-screen flex  justify-center">
-          <ScheduleDashboard />
+          <ScheduleDashboard setEventProps={setEventProps} />
         </div>
       </DefaultLayout>
     </>

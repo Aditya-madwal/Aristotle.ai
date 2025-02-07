@@ -14,8 +14,8 @@ import { StudyAreaService } from "../../lib/api/StudyAreaDashboard.jsx/StudyArea
 import FileUpload from "./FileUpload";
 import FlashCard from "../studyarea/Flashcard";
 import Roadmap from "./roadmap";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
   const [topic, setTopic] = useState("");
@@ -27,7 +27,10 @@ const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
       <div className="rounded-lg bg-white p-8 shadow-2xl max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Generate New Flashcards</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
             <X size={20} />
           </button>
         </div>
@@ -44,7 +47,8 @@ const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />
           <p className="mt-2 text-sm text-gray-500">
-            This will generate a set of flashcards based on the topic you provide.
+            This will generate a set of flashcards based on the topic you
+            provide.
           </p>
         </div>
 
@@ -73,7 +77,7 @@ const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
                 Generating...
               </>
             ) : (
-              'Generate Flashcards'
+              "Generate Flashcards"
             )}
           </button>
         </div>
@@ -110,11 +114,12 @@ const AreaDashboard = ({ setSelectedFile }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [pdfsResponse, detailsResponse, flashcardsResponse] = await Promise.all([
-        StudyAreaService.get_all_pdfs_for_roadmap(roadmapUid),
-        StudyAreaService.getRoadmapDetails(roadmapUid),
-        StudyAreaService.getRoadmapFlashcards(roadmapUid)
-      ]);
+      const [pdfsResponse, detailsResponse, flashcardsResponse] =
+        await Promise.all([
+          StudyAreaService.get_all_pdfs_for_roadmap(roadmapUid),
+          StudyAreaService.getRoadmapDetails(roadmapUid),
+          StudyAreaService.getRoadmapFlashcards(roadmapUid),
+        ]);
 
       setRoadmapPDFs(pdfsResponse);
       setRoadmapDetails(detailsResponse);
@@ -140,7 +145,9 @@ const AreaDashboard = ({ setSelectedFile }) => {
   const handleGenerateFlashcards = async (topic) => {
     try {
       setIsGenerating(true);
-      const response = await StudyAreaService.createFlashcard(roadmapUid, { topic });
+      const response = await StudyAreaService.createFlashcard(roadmapUid, {
+        topic,
+      });
       await fetchData(); // Refresh the flashcards
       setIsModalOpen(false);
       toast.success("Flashcards generated successfully!");
@@ -168,7 +175,9 @@ const AreaDashboard = ({ setSelectedFile }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-5 rounded-lg flex flex-col items-center">
             <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-3 text-gray-700 font-medium">Loading your study area...</p>
+            <p className="mt-3 text-gray-700 font-medium">
+              Loading your study area...
+            </p>
           </div>
         </div>
       )}
@@ -178,10 +187,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
           <span className="text-purple-600">{subject}</span>
         </h1>
         <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-md">
-          <Roadmap
-            roadmapData={roadmapDetails}
-            fetchRoadmapData={fetchData}
-          />
+          <Roadmap roadmapData={roadmapDetails} fetchRoadmapData={fetchData} />
 
           {/* Current Study Areas */}
           <FileUpload fetchRoadmapPDFs={fetchData} />
@@ -191,7 +197,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Flashcards
             </h2>
-            <button 
+            <button
               onClick={() => setIsModalOpen(true)}
               className="flex items-center gap-2 text-purple-600 hover:text-purple-700 bg-purple-100 p-1 px-4 rounded-full"
             >
@@ -208,14 +214,18 @@ const AreaDashboard = ({ setSelectedFile }) => {
             isLoading={isGenerating}
           />
 
-          <div className="py-6 flex flex-wrap gap-6 mb-10">
-            {flashcards.map((flashcard) => (
-              <FlashCard
-              content={flashcard.content}
-              uid={flashcard.uid}
-            />
-            ))}
-          </div>
+          {flashcards.length > 0 && (
+            <div className="py-6 flex flex-wrap gap-6 mb-10">
+              {flashcards.map((flashcard) => (
+                <FlashCard content={flashcard.content} uid={flashcard.uid} />
+              ))}
+            </div>
+          )}
+          {flashcards.length === 0 && (
+            <p className="flex items-center justify-center px-6 py-4 text-sm text-red-500 bg-red-50 my-6 rounded-lg border border-red-200">
+              No PDFs uploaded yet.
+            </p>
+          )}
 
           {/* Recent PDFs */}
           <div>
@@ -235,16 +245,17 @@ const AreaDashboard = ({ setSelectedFile }) => {
                 {roadmapPDFs.map((pdf) => (
                   <div
                     key={pdf.uid}
-                    className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4">
+                    className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4"
+                  >
                     {/* File Icon & Name (Span 5 columns) */}
                     <div className="col-span-5 flex items-center gap-3">
                       <FileText
                         className="text-red-400 flex-shrink-0"
                         size={20}
                       />
-                      <div className="text-sm text-left font-medium text-gray-700 hover:text-purple-600 break-words whitespace-normal overflow-hidden">                        
+                      <div className="text-sm text-left font-medium text-gray-700 hover:text-purple-600 break-words whitespace-normal overflow-hidden">
                         <button
-                        className="text-left"
+                          className="text-left"
                           onClick={() => {
                             setSelectedFile({
                               roadmapUid: roadmapUid,
@@ -255,7 +266,8 @@ const AreaDashboard = ({ setSelectedFile }) => {
                               summary:
                                 pdf.notes.overview || "No summary available",
                             });
-                          }}>
+                          }}
+                        >
                           {pdf.notes.title}
                         </button>
                       </div>
@@ -273,12 +285,18 @@ const AreaDashboard = ({ setSelectedFile }) => {
                       </span>
                       <button
                         onClick={() => handleDeletePDF(pdf.uid)}
-                        className="text-gray-400 hover:text-red-500 flex-shrink-0">
+                        className="text-gray-400 hover:text-red-500 flex-shrink-0"
+                      >
                         <Trash2 size={18} />
                       </button>
                     </div>
                   </div>
                 ))}
+                {roadmapPDFs.length === 0 && (
+                  <p className="flex items-center justify-center px-6 py-4 text-sm text-red-500 bg-red-50 ">
+                    No PDFs uploaded yet.
+                  </p>
+                )}
               </div>
             </div>
           </div>

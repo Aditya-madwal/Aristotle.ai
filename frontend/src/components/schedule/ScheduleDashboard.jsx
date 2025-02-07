@@ -4,26 +4,42 @@ import { MyContext } from "../../MyContext";
 import { Plus } from "lucide-react";
 import Calendar from "./Calendar";
 import AddEventModal from "./AddEventModal"; // Importing the modal we just created
+import { CalendarServices } from "../../lib/api/ScheduleServices/CalendarServices";
 
-const ScheduleDashboard = () => {
+const ScheduleDashboard = ({ setEventProps }) => {
   const { me, setMe } = useContext(MyContext);
   const [myinfo, setMyinfo] = useState(me);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [events, setEvents] = useState({});
+  const fetchEvents = () => {
+    try {
+      CalendarServices.getAllEvents().then((response) => {
+        // Transform the flat array into a date-keyed object
+        const eventsByDate = response.reduce((acc, event) => {
+          if (!acc[event.date]) {
+            acc[event.date] = [];
+          }
+          acc[event.date].push(event);
+          return acc;
+        }, {});
+        setEvents(eventsByDate);
+        console.log(eventsByDate);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    me ? setMyinfo(me) : null;
-  }, [me]);
+    fetchEvents();
+  }, []);
+
+  // useEffect(() => {
+  //   me ? setMyinfo(me) : null;
+  // }, [me]);
 
   const handleAddEvent = (newEvent) => {
-    // TODO: Implement logic to add event to user's schedule
     console.log("New Event:", newEvent);
-
-    // Optional: Update context or state with new event
-    // For example:
-    // const updatedEvents = [...me.events, newEvent];
-    // setMe({...me, events: updatedEvents});
-
-    // Close the modal
     setIsModalOpen(false);
   };
 
@@ -48,7 +64,7 @@ const ScheduleDashboard = () => {
             <span className="text-sm font-medium">Add Event</span>
           </button>
         </div>
-        <Calendar />
+        <Calendar setEventProps={setEventProps} events={events} />
       </section>
     </>
   );

@@ -142,7 +142,7 @@ class Label(models.Model):
     def __str__(self):
         return self.label_name
 
-class Calendar(models.Model):
+class Event(models.Model):
     uid = models.CharField(
         max_length=7,
         primary_key=True,
@@ -150,12 +150,11 @@ class Calendar(models.Model):
         default=generate_unique_uid,
         editable=False
     )
-    event_name = models.CharField(max_length=50)
+    eventTitle = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    date = models.DateField()
     status = models.BooleanField(default=False)
-    color = models.CharField(max_length=10)
+    colorHex = models.CharField(max_length=10)
     user = models.ForeignKey(
         CustomUser, 
         on_delete=models.CASCADE,
@@ -163,7 +162,7 @@ class Calendar(models.Model):
     )
 
     def __str__(self):
-        return self.event_name
+        return self.eventTitle
 
 class Todo(models.Model):
     uid = models.CharField(

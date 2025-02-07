@@ -3,10 +3,11 @@ import { ChevronLeft, ChevronDown, Plus, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { PdfServices } from "../lib/api/PdfServices/pdfServices";
 
-// Sample Data
+// Sample Data : for chat props
 const SAMPLE_DATA = {
   document: {
     id: "124",
@@ -68,7 +69,7 @@ const PdfPage = () => {
 
   return (
     <div className="h-screen w-full flex flex-col bg-gray-50">
-      <Header title={"Aristotle.ai"} />
+      <Header title={"Aristotle.ai"} roadmapUid={roadmapUid} />
 
       <div className="flex flex-1 overflow-hidden">
         <PDFPreview cid={cid} />
@@ -92,13 +93,16 @@ const PdfPage = () => {
 };
 
 // Header Component
-const Header = ({ title }) => (
+const Header = ({ title, roadmapUid }) => (
   <header className="flex items-center justify-between p-4 bg-white border-b">
     <div className="flex items-center gap-4">
-      <button className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-md text-sm">
+      <Link
+        to={`/studyarea/${roadmapUid}`}
+        className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-md text-sm"
+      >
         <ChevronLeft size={16} />
         Back to Dashboard
-      </button>
+      </Link>
     </div>
     <h1 className="text-lg font-semibold">{title}</h1>
     <div className="flex items-center gap-4">

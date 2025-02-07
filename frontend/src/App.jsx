@@ -17,6 +17,7 @@ import RedirectIfAuthenticated from "./lib/auth/RedirectIfAuthenticated";
 import Logout from "./lib/auth/Logout";
 import StudyAreaDashboard from "./pages/StudyArea";
 import PDFAnalysisPage from "./pages/Pdf";
+import User from "./pages/User";
 
 const RegisterAndLogout = () => {
   const navigate = useNavigate();
@@ -78,6 +79,14 @@ function App() {
           element={
             <AuthRequiringRoutes>
               <Schedule />
+            </AuthRequiringRoutes>
+          }
+        />
+        <Route
+          path="/user/:uid"
+          element={
+            <AuthRequiringRoutes>
+              <User />
             </AuthRequiringRoutes>
           }
         />

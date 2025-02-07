@@ -1,41 +1,55 @@
 import React, { useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { CalendarServices } from "../../lib/api/ScheduleServices/CalendarServices";
 
 const AddEventModal = ({ isOpen, onClose, onAddEvent }) => {
-  const [eventName, setEventName] = useState("");
+  const [eventTitle, setEventTitle] = useState("");
   const [description, setDescription] = useState("");
   const [eventDate, setEventDate] = useState("");
-  const [color, setColor] = useState("#3B82F6"); // Default blue
+  const [colorHex, setColorHex] = useState("#3A7D44"); // Default green
+  // const [status, setStatus] = useState(false);
 
   const colors = [
-    { name: "Blue", value: "#3B82F6" },
-    { name: "Green", value: "#10B981" },
-    { name: "Red", value: "#EF4444" },
-    { name: "Amber", value: "#F59E0B" },
-    { name: "Indigo", value: "#6366F1" },
-    { name: "Purple", value: "#8B5CF6" },
+    { name: "Green", value: "#3A7D44" },
+    { name: "Red", value: "#D70654" },
+    { name: "Blue", value: "#1E90FF" },
+    { name: "Orange", value: "#FF5733" },
+    { name: "Purple", value: "#8A2BE2" },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!eventName || !eventDate) return;
+    if (!eventTitle || !eventDate) return;
 
     const newEvent = {
-      name: eventName,
+      eventTitle,
       description,
       date: eventDate,
-      color,
+      // status,
+      colorHex,
     };
 
-    onAddEvent(newEvent);
-    resetForm();
+    try {
+      // Call the API to create the event
+      const createdEvent = await CalendarServices.createEvent(newEvent);
+
+      // Call the onAddEvent prop to update the parent component's state
+      onAddEvent(createdEvent);
+
+      // Reset the form
+      resetForm();
+    } catch (error) {
+      console.error("Error creating event:", error);
+      // Optionally, add error handling (e.g., show error message to user)
+    }
   };
 
   const resetForm = () => {
-    setEventName("");
+    setEventTitle("");
     setDescription("");
     setEventDate("");
-    setColor("#3B82F6");
+    setColorHex("#3A7D44");
+    // setStatus(false);
     onClose();
   };
 
@@ -115,8 +129,8 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent }) => {
                     </label>
                     <input
                       type="text"
-                      value={eventName}
-                      onChange={(e) => setEventName(e.target.value)}
+                      value={eventTitle}
+                      onChange={(e) => setEventTitle(e.target.value)}
                       placeholder="What's the event?"
                       className="w-full px-4 py-2.5 border border-gray-300 
                       rounded-lg focus:outline-none 
@@ -194,10 +208,10 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent }) => {
                           key={value}
                           type="button"
                           title={name}
-                          onClick={() => setColor(value)}
+                          onClick={() => setColorHex(value)}
                           className={`w-9 h-9 rounded-full 
                           ${
-                            color === value
+                            colorHex === value
                               ? "ring-2 ring-offset-2 ring-purple-500"
                               : ""
                           }`}
@@ -206,6 +220,37 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent }) => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Status Selection */}
+                  {/* <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Event Status
+                    </label>
+                    <div className="flex items-center space-x-4">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="false"
+                          checked={!status}
+                          onChange={() => setStatus(false)}
+                          className="form-radio text-purple-600"
+                        />
+                        <span className="ml-2">Pending</span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="true"
+                          checked={status}
+                          onChange={() => setStatus(true)}
+                          className="form-radio text-purple-600"
+                        />
+                        <span className="ml-2">Completed</span>
+                      </label>
+                    </div>
+                  </div> */}
 
                   {/* Submit and Cancel Buttons */}
                   <div className="flex justify-end space-x-3 pt-4">

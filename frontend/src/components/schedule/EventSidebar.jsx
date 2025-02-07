@@ -6,6 +6,7 @@ import {
   Folder,
 } from "lucide-react";
 import { CalendarDays } from "lucide-react";
+import { useEffect } from "react";
 
 const EventSidebar = ({
   eventTitle,
@@ -13,19 +14,22 @@ const EventSidebar = ({
   colorHex,
   categoryName,
   description,
-  eventUid,
+  uid,
 }) => {
   //   const [fileid, setFileId] = useState(fileId || null);
   const [isOpen, setIsOpen] = useState(false);
+  // alert(uid);
+  console.log(uid);
 
-  const prevFileIdRef = useRef(null); // Ref to store the previous fileId
+  const prevEventUidRef = useRef(null); // Ref to store the previous fileId
+  const [eventUid, setEventUid] = useState(uid);
 
-  //   useEffect(() => {
-  //     if (fileid && prevFileIdRef.current === null) {
-  //       setIsOpen(true);
-  //     }
-  //     prevFileIdRef.current = fileid; // Update the ref with the current fileId
-  //   }, [fileid]);
+  useEffect(() => {
+    if (uid && prevEventUidRef.current === null) {
+      setIsOpen(true);
+    }
+    prevEventUidRef.current = uid; // Update the ref with the current fileId
+  }, [uid]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -56,11 +60,15 @@ const EventSidebar = ({
           <div className="flex flex-col items-center mb-6">
             <div
               className="flex items-center justify-center  bg-gray-100 w-16 h-16 font-light text-gray-600 rounded-full mb-4"
-              //   style={{ backgroundColor: `${colorHex}20`, color: colorHex }}
+              style={{
+                backgroundColor: `${colorHex}33`,
+                // border: `1px solid ${colorHex}`,
+                color: `${colorHex}`,
+              }}
             >
               <CalendarDays className="w-10 h-10" />
             </div>
-            <h2 className="text-lg font-bold mb-4">{eventTitle}</h2>
+            <h2 className="text-lg font-bold mb-2">{eventTitle}</h2>
           </div>
 
           {/* Event Details */}
@@ -73,7 +81,10 @@ const EventSidebar = ({
               <span className="text-gray-500 font-medium">Color</span>
               <span
                 className="w-4 h-4 rounded-full"
-                style={{ backgroundColor: colorHex }}
+                style={{
+                  backgroundColor: `${colorHex}33`,
+                  border: `1px solid ${colorHex}`,
+                }}
               ></span>
             </div>
             <div className="flex justify-between">
@@ -84,10 +95,15 @@ const EventSidebar = ({
 
           {/* Description */}
           {description && (
-            <div className="bg-green-100 p-3 rounded-lg mt-4">
-              <h3 className="text-green-600 text-sm font-medium mb-2">
-                Description
-              </h3>
+            <div
+              className="bg-green-100 p-3 rounded-lg mt-4"
+              style={{
+                backgroundColor: `${colorHex}33`,
+                // border: `1px solid ${colorHex}`,
+                color: `${colorHex}`,
+              }}
+            >
+              <h3 className="text-sm font-medium mb-2">Description</h3>
               <p className="text-xs text-gray-800">{description}</p>
             </div>
           )}
@@ -95,7 +111,7 @@ const EventSidebar = ({
           {/* Buttons */}
           <div className="mt-auto pb-6">
             <button
-              onClick={() => onDeleteEvent(eventUid)}
+              onClick={() => onDeleteEvent(uid)}
               className="w-full border text-pink-600 bg-pink-100 text-sm py-2.5 rounded-full hover:bg-pink-200 transition"
             >
               Delete Event

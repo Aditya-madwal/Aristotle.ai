@@ -38,10 +38,16 @@ urlpatterns += [
          views.Flashcard_operations.as_view(), name='flashcards-generate'),
 ]
 
-
+# todo Urls
 urlpatterns += [
     path('todos/', views.TodoAPIView.as_view(), name='todo-list'),
     path('todos/', views.TodoAPIView.as_view(), name='todo-create'),
     path('todos/<slug:uid>/toggle/',
          views.TodoAPIView.as_view(), name='todo-toggle'),
+]
+
+# calender Urls
+urlpatterns += [
+    path('calendar/', views.CalendarOperations.as_view(), name='event-create'),
+    path('calendar/', views.CalendarOperations.as_view(), name='events-get'),
 ]

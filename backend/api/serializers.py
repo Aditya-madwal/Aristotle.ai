@@ -15,11 +15,10 @@ class UserSerializer(serializers.ModelSerializer):
         return None
 
 
-class CalenderSerializer(serializers.ModelSerializer):
+class CalendarSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Calendar
-        fields = ["event_name", "description",
-                  "start_date", "end_date", "status", "color"]
+        model = Event
+        fields = "__all__"
 
 
 class PDFChatsSerializer(serializers.ModelSerializer):

@@ -137,28 +137,22 @@ class RoadmapDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class MyCalender(APIView):
+class CalendarOperations(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        events = Calendar.objects.filter(user=request.user)
-        serializer = CalenderSerializer(events, many=True)
+        events = Event.objects.filter(user=request.user)
+        serializer = CalendarSerializer(events, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        name = request.data["event_name"]
-        start_date = request.data["start_date"]
-        end_date = request.data["end_date"]
-        color = request.data["color"]
-        description = request.data["description"]
-        status = request.data["status"]
-
-        event = Calendar.objects.create(event_name=name, start_date=start_date, end_date=end_date,
-                                        color=color, description=description, status=status, user=request.user)
-
-        serializer = CalenderSerializer(event)
-
-        return Response({"calendar event saved": serializer})
+        data = request.data
+        data["user"] = request.user.id
+        serializer = CalendarSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Calendar event saved", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
