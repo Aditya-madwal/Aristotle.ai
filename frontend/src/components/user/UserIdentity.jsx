@@ -9,7 +9,7 @@ const userInfo = {
 
 const UserIdentity = () => {
   return (
-    <div className="h-fit bg-white p-8 rounded-lg w-full">
+    <div className="h-fit bg-white p-8 rounded-lg w-full mb-4">
       <div className="w-full mx-auto">
         <div className="flex items-start gap-8">
           {/* Profile Image */}

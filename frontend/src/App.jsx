@@ -83,7 +83,7 @@ function App() {
           }
         />
         <Route
-          path="/user/:uid"
+          path="/profile"
           element={
             <AuthRequiringRoutes>
               <User />

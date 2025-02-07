@@ -1,7 +1,30 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { CalendarServices } from "../../lib/api/ScheduleServices/CalendarServices";
 
 const MiniCalendar = () => {
   const [currentDate] = useState(new Date());
+  const [events, setEvents] = useState({});
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await CalendarServices.getAllEvents();
+        // Transform the flat array into a date-keyed object
+        const eventsByDate = response.reduce((acc, event) => {
+          if (!acc[event.date]) {
+            acc[event.date] = [];
+          }
+          acc[event.date].push(event);
+          return acc;
+        }, {});
+        setEvents(eventsByDate);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+    fetchEvents();
+  }, []);
+
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -37,6 +60,12 @@ const MiniCalendar = () => {
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
+      const date = `${currentDate.getFullYear()}-${
+        currentDate.getMonth() + 1 < 10
+          ? "0" + (currentDate.getMonth() + 1)
+          : currentDate.getMonth() + 1
+      }-${day < 10 ? "0" + day : day}`;
+      const hasEvents = events[date] && events[date].length > 0;
       const isToday = day === currentDate.getDate();
       calendarDays.push(
         <div
@@ -44,6 +73,13 @@ const MiniCalendar = () => {
           className={`h-8 flex items-center justify-center rounded-full
             ${isToday ? "bg-violet-500 text-white" : "hover:bg-gray-100"}
             cursor-pointer text-sm`}
+          style={{
+            backgroundColor: hasEvents
+              ? `${events[date][0].colorHex}33`
+              : "#ffffff",
+            color: hasEvents ? events[date][0].colorHex : "#000000",
+            cursor: hasEvents ? "pointer" : "default",
+          }}
         >
           {day}
         </div>

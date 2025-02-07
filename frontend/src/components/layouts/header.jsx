@@ -1,7 +1,13 @@
 import React from "react";
 import { Settings, Search, Menu } from "lucide-react";
+// import { LogOut } from "lucide-react";
+import { MyContext } from "../../MyContext";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const { me } = useContext(MyContext);
+
   return (
     <header className="w-full bg-white px-6 py-3 h-fit">
       <div className="flex items-center justify-between gap-4">
@@ -28,21 +34,41 @@ const Header = () => {
         {/* Right Side Icons */}
         <div className="flex items-center gap-4">
           {/* Settings Button */}
-          <button
+          {/* <button
             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
             aria-label="Settings"
           >
             <Settings size={24} className="text-gray-600" />
-          </button>
+          </button> */}
 
           {/* Profile Picture */}
-          <button className="relative group">
-            <img
-              src="https://i.pinimg.com/736x/c3/88/80/c3888023324759ca0e60fdbb9b2a6119.jpg"
-              alt="Profile"
-              className="w-8 h-8 rounded-full cursor-pointer"
+          {/* <button className="relative group flex items-center gap-2 cursor-pointer bg-pink-100 p-2 rounded-full transition-colors duration-200">
+            <LogOut
+              size={24}
+              className="text-pink-500 transform-gpu scale-x-[-1]"
             />
-          </button>
+            <span className="text-pink-500">Logout</span>
+          </button> */}
+
+          {/* User Profile */}
+          <Link
+            to="/profile"
+            className="flex items-center bg-white p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
+          >
+            <img
+              alt="User Profile"
+              src={`${
+                import.meta.env.VITE_BACKEND_URL || "http://localhost:8000"
+              }${me?.pfp}`}
+              className="size-10 rounded-full object-cover"
+            />
+            {/* <div>
+              <p className="text-xs">
+                <strong className="block font-medium">{me?.username}</strong>
+                <span>{me?.email}</span>
+              </p>
+            </div> */}
+          </Link>
         </div>
       </div>
     </header>
