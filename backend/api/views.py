@@ -24,7 +24,9 @@ from django.utils.decorators import method_decorator
 from .gemini_logic import pdf_summarize, roadmap, flashcards
 from .gemini_logic.roadmap import generate_roadmap_data
 from .gemini_logic.flashcards import FlashcardsSet, generate_flashcards_for_topic
+
 import random
+import math
 
 from .ipfs_logic.ipfsServices import IPFSService
 
@@ -101,8 +103,38 @@ class RoadmapDetailView(APIView):
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+    def getRoadmapsProgress(self, request):
+        roadmaps = Roadmap.objects.filter(user=request.user)
+        try :
+            progress = []
+            for roadmap in roadmaps:
+                total = roadmap.milestones.count()
+                completed = roadmap.milestones.filter(status=True).count()
+                progress.append({
+                    "roadmap": roadmap.subject,
+                    "total": total,
+                    "completed": completed,
+                    "progress": math.floor(completed / total * 100)
+                })
+            return Response(progress, status=status.HTTP_200_OK)
+        
+        except Roadmap.DoesNotExist:
+            return Response(
+                {"error": "Roadmaps not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )   
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
     def get(self, request, roadmap_uid=None):
+        # Check if the request path matches the progress endpoint
+        if request.path.endswith('/roadmap/progress/'):
+            return self.getRoadmapsProgress(request)
         if roadmap_uid is None:
             return self.get_all_roadmaps(request)
         return self.get_specific_roadmap(request, roadmap_uid)
@@ -235,6 +267,7 @@ class PDFoperations(APIView):
 
             serializer = PDFSerializer(pdfs, many=True)
             return Response({
+                "message": "PDFs retrieved successfully",
                 "pdfs": serializer.data,
                 "total_count": PDF.objects.filter(user=request.user).count(),
                 "limit": RECENT_PDFS_LIMIT

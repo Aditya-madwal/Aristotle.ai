@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import authServices from "../lib/api/authServices/authservices";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const Register = () => {
     first_name: "",
     last_name: "",
     course: "",
-    bio: ""
+    bio: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Register = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -42,7 +42,10 @@ const Register = () => {
       navigate("/auth/login");
     } catch (error) {
       console.error("Registration error:", error);
-      toast.error(error.response?.data?.message || "Registration failed. Please try again.");
+      toast.error(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -55,7 +58,7 @@ const Register = () => {
         <aside className="relative lg:col-span-5 xl:col-span-6 h-full hidden lg:block">
           <img
             alt=""
-            src="https://i.pinimg.com/736x/c3/88/80/c3888023324759ca0e60fdbb9b2a6119.jpg"
+            src="https://images.unsplash.com/photo-1738467990752-6e00e436919d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             className="absolute inset-0 h-full w-full object-cover p-8 rounded-[100px]"
           />
         </aside>
@@ -67,7 +70,9 @@ const Register = () => {
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-5 rounded-lg flex flex-col items-center">
                   <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-                  <p className="mt-3 text-gray-700 font-medium">Creating your account...</p>
+                  <p className="mt-3 text-gray-700 font-medium">
+                    Creating your account...
+                  </p>
                 </div>
               </div>
             )}
@@ -76,10 +81,16 @@ const Register = () => {
               Create Your Account
             </h1>
 
-            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-8 grid grid-cols-6 gap-6"
+            >
               {/* Username */}
               <div className="col-span-6 sm:col-span-3">
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Username*
                 </label>
                 <input
@@ -95,7 +106,10 @@ const Register = () => {
 
               {/* Email */}
               <div className="col-span-6 sm:col-span-3">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email*
                 </label>
                 <input
@@ -111,7 +125,10 @@ const Register = () => {
 
               {/* First Name */}
               <div className="col-span-6 sm:col-span-3">
-                <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="first_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   First Name*
                 </label>
                 <input
@@ -127,7 +144,10 @@ const Register = () => {
 
               {/* Last Name */}
               <div className="col-span-6 sm:col-span-3">
-                <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="last_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Last Name*
                 </label>
                 <input
@@ -143,7 +163,10 @@ const Register = () => {
 
               {/* Password */}
               <div className="col-span-6 sm:col-span-3">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password*
                 </label>
                 <input
@@ -159,7 +182,10 @@ const Register = () => {
 
               {/* Password Confirmation */}
               <div className="col-span-6 sm:col-span-3">
-                <label htmlFor="password2" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password2"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Confirm Password*
                 </label>
                 <input
@@ -175,7 +201,10 @@ const Register = () => {
 
               {/* Course */}
               <div className="col-span-6">
-                <label htmlFor="course" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="course"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Course*
                 </label>
                 <input
@@ -191,7 +220,10 @@ const Register = () => {
 
               {/* Bio */}
               <div className="col-span-6">
-                <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="bio"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Bio
                 </label>
                 <textarea
@@ -203,6 +235,12 @@ const Register = () => {
                   className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
+
+              {/* pfp */}
+
+              {/* <div className="col-span-6 sm:col-span-3">
+                <input type="file" name="pfp" onChange={handleChange} />
+              </div> */}
 
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button

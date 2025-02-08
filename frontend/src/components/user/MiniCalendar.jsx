@@ -74,10 +74,18 @@ const MiniCalendar = () => {
             ${isToday ? "bg-violet-500 text-white" : "hover:bg-gray-100"}
             cursor-pointer text-sm`}
           style={{
-            backgroundColor: hasEvents
-              ? `${events[date][0].colorHex}33`
-              : "#ffffff",
-            color: hasEvents ? events[date][0].colorHex : "#000000",
+            backgroundColor:
+              hasEvents && !isToday
+                ? `${events[date][0].colorHex}33`
+                : isToday
+                ? "bg-violet-500 text-white"
+                : "#ffffff",
+            color:
+              hasEvents && !isToday
+                ? events[date][0].colorHex
+                : isToday
+                ? "#ffffff"
+                : "#000000",
             cursor: hasEvents ? "pointer" : "default",
           }}
         >

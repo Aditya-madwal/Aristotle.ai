@@ -13,6 +13,7 @@ urlpatterns += [
          name='roadmap-get-all'),
     path('roadmap/<str:roadmap_uid>/update/',
          views.RoadmapDetailView.as_view(), name='roadmap-update'),
+    path('roadmap/progress/', views.RoadmapDetailView.as_view(), name='roadmap-progress'),
 ]
 
 # pdf Urls

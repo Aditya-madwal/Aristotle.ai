@@ -2,9 +2,9 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import authServices from "../lib/api/authServices/authservices";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { ClipLoader } from 'react-spinners';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ClipLoader } from "react-spinners";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -35,13 +35,12 @@ const Login = () => {
       }
 
       navigate("/");
-
     } catch (error) {
       console.error("Login error:", error);
       toast.error(
         error.response?.data?.message ||
-        error.message ||
-        "Login failed. Please try again."
+          error.message ||
+          "Login failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -53,9 +52,9 @@ const Login = () => {
       <div className="lg:grid lg:grid-cols-12 lg:h-full">
         {/* Sidebar with Image */}
         <aside className="relative lg:col-span-5 xl:col-span-6 h-full hidden lg:block">
-        <img
+          <img
             alt=""
-            src="https://i.pinimg.com/736x/c3/88/80/c3888023324759ca0e60fdbb9b2a6119.jpg"
+            src="https://images.unsplash.com/photo-1738467990752-6e00e436919d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             className="absolute inset-0 h-full w-full object-cover p-8 rounded-[100px]"
           />
         </aside>
@@ -80,7 +79,10 @@ const Login = () => {
               Please sign in to your account to continue
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-8 grid grid-cols-6 gap-6"
+            >
               {/* Username */}
               <div className="col-span-6">
                 <label
@@ -121,34 +123,12 @@ const Login = () => {
                 />
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="col-span-6 flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    name="remember"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
-                    Remember me
-                  </label>
-                </div>
-
-                <Link
-                  to="/auth/forgot-password"
-                  className="text-sm font-medium text-blue-600 hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
               {/* Submit Button */}
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 disabled:opacity-50"
+                  className="inline-block shrink-0 rounded-md border border-purple-600 bg-purple-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-purple-600 focus:outline-none focus:ring active:text-purple-500 disabled:opacity-50"
                 >
                   {loading ? "Signing in..." : "Sign in"}
                 </button>

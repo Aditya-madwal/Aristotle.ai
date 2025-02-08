@@ -3,18 +3,20 @@ import { useContext } from "react";
 import { MyContext } from "../../MyContext";
 import { Plus } from "lucide-react";
 import Calendar from "./Calendar";
-import AddEventModal from "./AddEventModal"; // Importing the modal we just created
+import AddEventModal from "./AddEventModal";
 import { CalendarServices } from "../../lib/api/ScheduleServices/CalendarServices";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Add this import
 
 const ScheduleDashboard = ({ setEventProps }) => {
   const { me, setMe } = useContext(MyContext);
   const [myinfo, setMyinfo] = useState(me);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState({});
+
   const fetchEvents = () => {
     try {
       CalendarServices.getAllEvents().then((response) => {
-        // Transform the flat array into a date-keyed object
         const eventsByDate = response.reduce((acc, event) => {
           if (!acc[event.date]) {
             acc[event.date] = [];
@@ -27,6 +29,7 @@ const ScheduleDashboard = ({ setEventProps }) => {
       });
     } catch (error) {
       console.log(error);
+      toast.error("Failed to fetch events"); // Add error toast
     }
   };
 
@@ -34,21 +37,30 @@ const ScheduleDashboard = ({ setEventProps }) => {
     fetchEvents();
   }, []);
 
-  // useEffect(() => {
-  //   me ? setMyinfo(me) : null;
-  // }, [me]);
-
   const handleAddEvent = (newEvent) => {
     console.log("New Event:", newEvent);
+    toast.success("Event added successfully!");
     setIsModalOpen(false);
   };
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <AddEventModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAddEvent={handleAddEvent}
+        fetchEvents={fetchEvents}
       />
       <section className="flex flex-col w-full">
         <div className="flex items-center justify-between mb-3">

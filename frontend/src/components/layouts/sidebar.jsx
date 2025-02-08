@@ -1,13 +1,5 @@
 import { useContext, useState } from "react";
-import {
-  Menu,
-  X,
-  Home,
-  BarChart,
-  Calendar,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { X, Home, Calendar, LogOut, CircleUserRound } from "lucide-react";
 import { MyContext } from "../../MyContext";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -79,22 +71,16 @@ const Sidebar = ({ active }) => {
       tab: "dashboard",
     },
     {
-      name: "Reports",
-      icon: <BarChart size={24} />,
-      link: "/reports",
-      tab: "reports",
-    },
-    {
       name: "Schedule",
       icon: <Calendar size={24} />,
       link: "/schedule",
       tab: "schedule",
     },
     {
-      name: "Settings",
-      icon: <Settings size={24} />,
-      link: "/settings",
-      tab: "Settings",
+      name: "Profile",
+      icon: <CircleUserRound size={24} />,
+      link: "/profile",
+      tab: "profile",
     },
   ];
 
