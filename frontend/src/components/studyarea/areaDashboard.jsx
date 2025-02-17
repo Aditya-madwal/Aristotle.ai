@@ -19,7 +19,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
   const [topic, setTopic] = useState("");
-
   if (!isOpen) return null;
 
   return (
@@ -29,8 +28,7 @@ const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
           <h2 className="text-lg font-bold">Generate New Flashcards</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+            className="text-gray-500 hover:text-gray-700">
             <X size={20} />
           </button>
         </div>
@@ -56,8 +54,7 @@ const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
           <button
             type="button"
             onClick={onClose}
-            className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-          >
+            className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100">
             Cancel
           </button>
 
@@ -69,8 +66,7 @@ const FlashcardModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
               }
             }}
             disabled={!topic.trim() || isLoading}
-            className="rounded bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
+            className="rounded bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
             {isLoading ? (
               <>
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -199,8 +195,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
             </h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 text-purple-600 hover:text-purple-700 bg-purple-100 p-1 px-4 rounded-full"
-            >
+              className="flex items-center gap-2 text-purple-600 hover:text-purple-700 bg-purple-100 p-1 px-4 rounded-full">
               <Plus size={20} />
               <span className="text-sm font-medium">Add New Flashcard</span>
             </button>
@@ -245,8 +240,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
                 {roadmapPDFs.map((pdf) => (
                   <div
                     key={pdf.uid}
-                    className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4"
-                  >
+                    className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4">
                     {/* File Icon & Name (Span 5 columns) */}
                     <div className="col-span-5 flex items-center gap-3">
                       <FileText
@@ -266,8 +260,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
                               summary:
                                 pdf.notes.overview || "No summary available",
                             });
-                          }}
-                        >
+                          }}>
                           {pdf.notes.title}
                         </button>
                       </div>
@@ -285,8 +278,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
                       </span>
                       <button
                         onClick={() => handleDeletePDF(pdf.uid)}
-                        className="text-gray-400 hover:text-red-500 flex-shrink-0"
-                      >
+                        className="text-gray-400 hover:text-red-500 flex-shrink-0">
                         <Trash2 size={18} />
                       </button>
                     </div>

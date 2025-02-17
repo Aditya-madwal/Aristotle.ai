@@ -18,6 +18,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework import status
 
+from api.ipfs_logic.ipfsServices import IPFSService
+import random
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class RegistrationView(APIView):
@@ -33,13 +36,19 @@ class RegistrationView(APIView):
         user.save()
 
         if user.pfp == "" or user.pfp == None:
-            user.pfp = "/pfps/default.png"
+            user.cid = "bafkreibogcihe2b6gya5ezuncapcu57a4ban7xvbyp2e2qezq2taaykpbm"
 
+        # Upload file to IPFS
+        ipfs_service = IPFSService()
+        cid = ipfs_service.upload_file(file=user.pfp, filename=user.username)
+
+        user.cid = cid
         user.save()
 
         refresh = RefreshToken.for_user(user)
 
-        return Response({'status': 200, 'payload': serializer.data, 'message': "your data has been saved", 'refresh_token': str(refresh), 'access_token': str(refresh.access_token)})
+        return Response({'status': 200, 'payload': serializer.data, 'message': "your data has been saved",
+                         'refresh_token': str(refresh), 'access_token': str(refresh.access_token)})
 
 
 class IsAuthenticated(APIView):
@@ -60,6 +69,7 @@ class IsAuthenticated(APIView):
                     "username": user.username,
                     "bio": user.bio,
                     "course": user.course,
+                    "cid": user.cid
                 }
             }
             return Response(data, status=status.HTTP_200_OK)
