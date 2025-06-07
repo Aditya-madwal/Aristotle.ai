@@ -12,7 +12,16 @@ SECRET_KEY = 'django-insecure-6$9l=k#nbes@!iu&(2$*#a_-3%v)%h+_9f66!874k7p4d&ngq(
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "aristotle-1s1x.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://aristotle-1s1x.onrender.com"
+]
+
 
 
 # Application definition
