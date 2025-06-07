@@ -4,6 +4,7 @@ import { Settings, Search, Menu } from "lucide-react";
 import { MyContext } from "../../MyContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import process from "process";
 
 const Header = () => {
   const { me } = useContext(MyContext);

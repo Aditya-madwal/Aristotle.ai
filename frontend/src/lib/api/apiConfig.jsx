@@ -4,7 +4,7 @@ import { ACCESS_TOKEN } from "./constants";
 import process from "process";
 
 const api = axios.create({
-  baseURL: process.env.BACKEND_URL || "http://localhost:8000",
+  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:8000",
 });
 
 api.interceptors.request.use(
