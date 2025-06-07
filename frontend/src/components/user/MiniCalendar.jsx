@@ -9,7 +9,6 @@ const MiniCalendar = () => {
     const fetchEvents = async () => {
       try {
         const response = await CalendarServices.getAllEvents();
-        // Transform the flat array into a date-keyed object
         const eventsByDate = response.reduce((acc, event) => {
           if (!acc[event.date]) {
             acc[event.date] = [];
@@ -87,8 +86,7 @@ const MiniCalendar = () => {
                 ? "#ffffff"
                 : "#000000",
             cursor: hasEvents ? "pointer" : "default",
-          }}
-        >
+          }}>
           {day}
         </div>
       );
@@ -108,8 +106,7 @@ const MiniCalendar = () => {
         {days.map((day) => (
           <div
             key={day}
-            className="h-8 flex items-center justify-center text-sm font-medium text-gray-500"
-          >
+            className="h-8 flex items-center justify-center text-sm font-medium text-gray-500">
             {day}
           </div>
         ))}

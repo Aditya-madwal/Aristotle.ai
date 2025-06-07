@@ -3,7 +3,6 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Send, Info, X, Star } from "lucide-react";
 
-// Analysis Report Component
 const AnalysisReport = ({ pdfData, tab, setTab }) => {
   return (
     <div className="bg-white p-6 rounded-lg">
@@ -11,8 +10,6 @@ const AnalysisReport = ({ pdfData, tab, setTab }) => {
         <h2 className="text-lg font-semibold">Sample file #124</h2>
         <button className="text-gray-400 hover:text-gray-600">&times;</button>
       </div>
-
-   {/* //dwed */}
 
       <div className="space-y-6">
         <section>
@@ -79,7 +76,6 @@ const ChatComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-    // Add message handling logic here
     setMessage("");
   };
 
@@ -130,8 +126,7 @@ const ChatComponent = () => {
           />
           <button
             type="submit"
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-600"
-          >
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-600">
             <Send size={20} />
           </button>
         </div>

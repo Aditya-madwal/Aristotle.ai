@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { MyContext } from "../MyContext";
 import DefaultLayout from "../components/layouts/defaultlayout";
 import EventSidebar from "../components/schedule/EventSidebar";
-// import Calendar from "../components/schedule/Calendar";
 import ScheduleDashboard from "../components/schedule/ScheduleDashboard";
 
 const Schedule = () => {

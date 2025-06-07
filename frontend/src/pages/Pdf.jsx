@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 
 import { PdfServices } from "../lib/api/PdfServices/pdfServices";
 
-// Sample Data : for chat props
 const SAMPLE_DATA = {
   document: {
     id: "124",

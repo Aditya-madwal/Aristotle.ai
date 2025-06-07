@@ -132,7 +132,6 @@ class RoadmapDetailView(APIView):
 
 
     def get(self, request, roadmap_uid=None):
-        # Check if the request path matches the progress endpoint
         if request.path.endswith('/roadmap/progress/'):
             return self.getRoadmapsProgress(request)
         if roadmap_uid is None:
@@ -178,13 +177,19 @@ class CalendarOperations(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        data = request.data
-        data["user"] = request.user.id
-        serializer = CalendarSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Calendar event saved", "data": serializer.data}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try :
+            data = request.data
+            data["user"] = request.user.id
+            serializer = CalendarSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Calendar event saved", "data": serializer.data}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -193,44 +198,34 @@ class PDFoperations(APIView):
 
     def post(self, request, roadmap_uid):
         try:
-            # Get the uploaded PDF file
             pdf_file = request.FILES.get('file')
             if not pdf_file:
                 return JsonResponse({"error": "No file provided"}, status=400)
 
-            # Ensure the parent roadmap exists
             try:
                 parent_roadmap = Roadmap.objects.get(uid=roadmap_uid)
             except Roadmap.DoesNotExist:
                 return JsonResponse({"error": "Roadmap not found"}, status=404)
 
-            # Initialize the generator
             generator = pdf_summarize.PDFNotesGenerator(api_key=GOOGLE_API_KEY)
 
-           # Generate notes from the uploaded PDF
             notes_result = generator.generate_notes(pdf_file)
 
-            # Reset file pointer to the beginning
             pdf_file.seek(0)
 
-            # Upload file to IPFS
             random_id = ''.join([str(random.randint(0, 9)) for _ in range(9)])
             ipfs_service = IPFSService()
             cid = ipfs_service.upload_file(file=pdf_file, filename=random_id)
 
-            # Create a PDF instance in the database
             pdf_instance = PDF.objects.create(
                 url=pdf_file.name,
-                size=pdf_file.size / 1024,  # File size in KB
+                size=pdf_file.size / 1024,
                 user=request.user,
                 notes=notes_result,
                 cid=cid,
                 parent_roadmap=parent_roadmap
             )
 
-            # print(ipfs_service.get_file_metadata(pdf_instance.cid))
-
-            # Return response
             return JsonResponse({
                 "message": "Notes generated successfully",
                 "pdf_uid": pdf_instance.uid,
@@ -433,7 +428,7 @@ class TodoAPIView(APIView):
             todo = Todo.objects.get(uid=uid, user=request.user)
             todo.status = not todo.status
             todo.save()
-            serializer = TodoSerializer(todo)  # Return updated data
+            serializer = TodoSerializer(todo)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Todo.DoesNotExist:
             return Response(

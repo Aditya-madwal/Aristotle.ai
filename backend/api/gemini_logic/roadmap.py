@@ -179,7 +179,7 @@ def generate_roadmap_data(topic, duration, difficulty):
 # print(generate_roadmap_data("react js", "3 months", "beginner"))
 
 
-# Example usage
+# # Example usage
 # if __name__ == "__main__":
 #     GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 

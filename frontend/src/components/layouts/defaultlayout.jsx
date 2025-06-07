@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "./sidebar"; // Import the Sidebar component
+import Sidebar from "./sidebar";
 import Header from "./header";
 
 const DefaultLayout = ({ children, RightSidebar, active }) => {

@@ -6,7 +6,7 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
   const [eventTitle, setEventTitle] = useState("");
   const [description, setDescription] = useState("");
   const [eventDate, setEventDate] = useState("");
-  const [colorHex, setColorHex] = useState("#3A7D44"); // Default green
+  const [colorHex, setColorHex] = useState("#3A7D44");
 
   const colors = [
     { name: "Green", value: "#3A7D44" },
@@ -19,6 +19,11 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!eventTitle || !eventDate) return;
+
+    if (!eventDate || !description || !colorHex || !eventTitle) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
     const newEvent = {
       eventTitle,
@@ -49,42 +54,15 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
     <Dialog
       open={isOpen}
       onClose={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-    >
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative border border-gray-200">
-        {/* Close Button */}
-        {/* <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button> */}
-
-        {/* Modal Title */}
         <Dialog.Title className="text-left mb-4">
           <h2 className="text-2xl font-semibold text-purple-600">
             Create New Event
           </h2>
-          {/* <p className="text-sm text-gray-500 mt-2">
-            Add a new event to your schedule
-          </p> */}
         </Dialog.Title>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Event Name Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Event Name
@@ -104,7 +82,6 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
             />
           </div>
 
-          {/* Description Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
@@ -121,7 +98,6 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
             />
           </div>
 
-          {/* Date Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Event Date
@@ -139,8 +115,7 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
                 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -151,7 +126,6 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
             </div>
           </div>
 
-          {/* Color Selection (with transition) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Event Color
@@ -174,19 +148,16 @@ const AddEventModal = ({ isOpen, onClose, onAddEvent, fetchEvents }) => {
             </div>
           </div>
 
-          {/* Submit and Cancel Buttons */}
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
               onClick={resetForm}
-              className="px-4 py-2 text-gray-600"
-            >
+              className="px-4 py-2 text-gray-600">
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-purple-600 text-white rounded-full"
-            >
+              className="px-4 py-2 bg-purple-600 text-white rounded-full">
               Create Event
             </button>
           </div>

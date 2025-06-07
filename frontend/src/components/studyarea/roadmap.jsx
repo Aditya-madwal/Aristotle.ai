@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { Book, Video, Link as LinkIcon, ChevronRight } from "lucide-react";
-import StudyAreaServices from "../../lib/api/StudyAreaDashboard.jsx/StudyAreaServices"; // Import StudyAreaServices
+import StudyAreaServices from "../../lib/api/StudyAreaDashboard.jsx/StudyAreaServices";
 
-const RoadmapMilestone = ({
-  milestone,
-  isCurrentMilestone,
-  onComplete,
-}) => {
+const RoadmapMilestone = ({ milestone, isCurrentMilestone, onComplete }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const getResourceIcon = (type) => {
     switch (type) {
@@ -23,14 +19,12 @@ const RoadmapMilestone = ({
     <div
       className={`rounded-xl p-4 ${
         isCurrentMilestone ? "bg-purple-100" : "bg-gray-100"
-      } w-full`}
-    >
+      } w-full`}>
       <h3 className="font-semibold text-base mb-2">{milestone.title}</h3>
       <p className="text-gray-600 text-sm mb-2">
         Duration: {milestone.duration}
       </p>
 
-      {/* Topics */}
       <div className="mb-3">
         <p className="text-xs text-gray-500 mb-1">Topics covered:</p>
         <ul className="text-xs text-gray-700 list-disc list-inside">
@@ -44,15 +38,13 @@ const RoadmapMilestone = ({
           {!isExpanded && milestone.topics.length > 3 && (
             <li
               className="text-purple-600 cursor-pointer"
-              onClick={() => setIsExpanded(true)}
-            >
+              onClick={() => setIsExpanded(true)}>
               +{milestone.topics.length - 3} more topics...
             </li>
           )}
         </ul>
       </div>
 
-      {/* Resources */}
       {isExpanded && (
         <div className="mb-3">
           <p className="text-xs font-medium text-gray-600 mb-1">Resources:</p>
@@ -63,8 +55,7 @@ const RoadmapMilestone = ({
                 href={resource.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-gray-600 hover:text-purple-600"
-              >
+                className="flex items-center gap-2 text-xs text-gray-600 hover:text-purple-600">
                 {getResourceIcon(resource.type)}
                 <span className="truncate">{resource.title}</span>
                 <span className="text-gray-400">
@@ -76,7 +67,6 @@ const RoadmapMilestone = ({
         </div>
       )}
 
-      {/* Projects */}
       {isExpanded && milestone.projects.length > 0 && (
         <div className="mb-3">
           <p className="text-xs font-medium text-gray-600 mb-1">Projects:</p>
@@ -99,8 +89,7 @@ const RoadmapMilestone = ({
                       isCurrentMilestone
                         ? "bg-purple-200 hover:bg-purple-300 text-purple-700"
                         : "bg-gray-200 hover:bg-gray-300 text-gray-700"
-                    }`}
-      >
+                    }`}>
         {isExpanded ? "Show Less" : "Know More"}
       </button>
       {isCurrentMilestone && (
@@ -111,8 +100,7 @@ const RoadmapMilestone = ({
                       isCurrentMilestone
                         ? "bg-purple-200 hover:bg-purple-300 text-purple-700"
                         : "bg-gray-200 hover:bg-gray-300 text-gray-700"
-                    }`}
-        >
+                    }`}>
           Mark as Complete
         </button>
       )}
@@ -128,7 +116,7 @@ const Roadmap = ({ roadmapData, fetchRoadmapData }) => {
       await StudyAreaServices.incrementMilestone(roadmapData.uid);
       fetchRoadmapData();
     } catch (error) {
-      console.error('Error incrementing milestone:', error);
+      console.error("Error incrementing milestone:", error);
     }
   };
   console.log(roadmapData.status);
@@ -144,17 +132,14 @@ const Roadmap = ({ roadmapData, fetchRoadmapData }) => {
             ({roadmapData?.duration})
           </span>
           {roadmapData.status == true ? (
-            <span
-              className="inline-flex items-center justify-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-emerald-700"
-            >
+            <span className="inline-flex items-center justify-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-emerald-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="-ms-1 me-1.5 size-4"
-              >
+                className="-ms-1 me-1.5 size-4">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -164,17 +149,14 @@ const Roadmap = ({ roadmapData, fetchRoadmapData }) => {
               <p className="whitespace-nowrap text-sm">Completed</p>
             </span>
           ) : (
-            <span
-              className="inline-flex items-center justify-center rounded-full bg-blue-100 px-2.5 py-0.5 text-blue-700"
-            >
+            <span className="inline-flex items-center justify-center rounded-full bg-blue-100 px-2.5 py-0.5 text-blue-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="-ms-1 me-1.5 size-4"
-              >
+                className="-ms-1 me-1.5 size-4">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -187,20 +169,15 @@ const Roadmap = ({ roadmapData, fetchRoadmapData }) => {
         </div>
       </div>
 
-      {/* Fixed height scrollable container */}
       <div className="border border-dashed border-gray-300 rounded-lg h-[50vh] overflow-y-auto">
         <div className="p-6 relative">
-          {/* Vertical timeline line */}
           <div className="absolute left-8 top-0 bottom-0 w-px border-l-2 border-dashed border-gray-300" />
 
-          {/* Milestones */}
           <div className="space-y-8">
             {roadmapData?.milestones?.map((milestone, index) => (
               <div key={milestone.uid} className="relative pl-16">
-                {/* Horizontal connector line */}
                 <div className="absolute left-8 top-1/2 w-8 h-px bg-purple-400" />
 
-                {/* Timeline dot */}
                 <div
                   className={`absolute left-7 top-1/2 w-2 h-2 rounded-full 
                                         ${
@@ -214,7 +191,8 @@ const Roadmap = ({ roadmapData, fetchRoadmapData }) => {
                 <RoadmapMilestone
                   milestone={milestone}
                   isCurrentMilestone={
-                    roadmapData.current_milestone && roadmapData.current_milestone?.uid === milestone.uid
+                    roadmapData.current_milestone &&
+                    roadmapData.current_milestone?.uid === milestone.uid
                   }
                   onComplete={handleIncrementMilestone}
                 />

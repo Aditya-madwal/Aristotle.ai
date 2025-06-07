@@ -27,6 +27,7 @@ export const CalendarServices = {
       const response = await api.post(`/api/calendar/`, eventData);
       return response.data;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   },

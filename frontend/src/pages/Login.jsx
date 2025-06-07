@@ -81,14 +81,12 @@ const Login = () => {
 
             <form
               onSubmit={handleSubmit}
-              className="mt-8 grid grid-cols-6 gap-6"
-            >
+              className="mt-8 grid grid-cols-6 gap-6">
               {/* Username */}
               <div className="col-span-6">
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                  className="block text-sm font-medium text-gray-700">
                   Username
                 </label>
                 <input
@@ -107,8 +105,7 @@ const Login = () => {
               <div className="col-span-6">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                  className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
                 <input
@@ -123,13 +120,11 @@ const Login = () => {
                 />
               </div>
 
-              {/* Submit Button */}
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-block shrink-0 rounded-md border border-purple-600 bg-purple-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-purple-600 focus:outline-none focus:ring active:text-purple-500 disabled:opacity-50"
-                >
+                  className="inline-block shrink-0 rounded-md border border-purple-600 bg-purple-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-purple-600 focus:outline-none focus:ring active:text-purple-500 disabled:opacity-50">
                   {loading ? "Signing in..." : "Sign in"}
                 </button>
 

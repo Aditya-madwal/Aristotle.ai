@@ -100,7 +100,6 @@ const AreaDashboard = ({ setSelectedFile }) => {
   const handleDeletePDF = async (pdfUid) => {
     try {
       await StudyAreaService.deletePDF(roadmapUid, pdfUid);
-      // Refresh the PDFs list after successful deletion
       ondeletePDF();
     } catch (error) {
       console.error("Error deleting PDF:", error);
@@ -144,7 +143,7 @@ const AreaDashboard = ({ setSelectedFile }) => {
       const response = await StudyAreaService.createFlashcard(roadmapUid, {
         topic,
       });
-      await fetchData(); // Refresh the flashcards
+      await fetchData();
       setIsModalOpen(false);
       toast.success("Flashcards generated successfully!");
     } catch (error) {
@@ -155,7 +154,6 @@ const AreaDashboard = ({ setSelectedFile }) => {
     }
   };
 
-  // Function to format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -185,10 +183,8 @@ const AreaDashboard = ({ setSelectedFile }) => {
         <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-md">
           <Roadmap roadmapData={roadmapDetails} fetchRoadmapData={fetchData} />
 
-          {/* Current Study Areas */}
           <FileUpload fetchRoadmapPDFs={fetchData} />
 
-          {/* flashcards */}
           <div className="flex justify-between items-center w-full mt-10">
             <h2 className="text-xl font-semibold text-gray-800">
               Your Flashcards
@@ -235,13 +231,11 @@ const AreaDashboard = ({ setSelectedFile }) => {
                 <div>Overview</div>
               </div>
 
-              {/* Table Body */}
               <div className="divide-y divide-gray-200 bg-white">
                 {roadmapPDFs.map((pdf) => (
                   <div
                     key={pdf.uid}
                     className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4">
-                    {/* File Icon & Name (Span 5 columns) */}
                     <div className="col-span-5 flex items-center gap-3">
                       <FileText
                         className="text-red-400 flex-shrink-0"
@@ -266,12 +260,10 @@ const AreaDashboard = ({ setSelectedFile }) => {
                       </div>
                     </div>
 
-                    {/* Date (Span 3 columns) */}
                     <div className="col-span-3 text-sm text-gray-500">
                       {formatDate(pdf.date_uploaded)}
                     </div>
 
-                    {/* Section Label & Delete Button (Span 4 columns, ensuring button is visible) */}
                     <div className="col-span-4 flex items-center justify-between">
                       <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-600 text-xs truncate">
                         {pdf.notes.overview}

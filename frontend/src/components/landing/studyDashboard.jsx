@@ -47,8 +47,7 @@ const CreateRoadmapModal = () => {
     <div>
       <button
         className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-8 bg-purple-100 p-2 px-4 rounded-full"
-        onClick={() => setShowModal(true)}
-      >
+        onClick={() => setShowModal(true)}>
         <Plus size={20} />
         <span className="text-sm font-medium">Add New Study Area</span>
       </button>
@@ -56,7 +55,6 @@ const CreateRoadmapModal = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-full max-w-lg mx-4">
-            {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center gap-2">
                 <Plus className="text-orange-400" size={24} />
@@ -64,15 +62,12 @@ const CreateRoadmapModal = () => {
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
+                className="text-gray-400 hover:text-gray-600">
                 <X size={24} />
               </button>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              {/* Topic */}
               <div className="space-y-2">
                 <label className="block text-gray-700 font-medium">Topic</label>
                 <input
@@ -86,7 +81,6 @@ const CreateRoadmapModal = () => {
                 />
               </div>
 
-              {/* Duration */}
               <div className="space-y-2">
                 <label className="block text-gray-700 font-medium">
                   Duration
@@ -102,7 +96,6 @@ const CreateRoadmapModal = () => {
                 />
               </div>
 
-              {/* Difficulty */}
               <div className="space-y-2">
                 <label className="block text-gray-700 font-medium">
                   Difficulty
@@ -124,20 +117,17 @@ const CreateRoadmapModal = () => {
                 </div>
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-full"
-                >
+                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-full">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !formData.topic || !formData.duration}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                  className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed">
                   {loading ? "Generating..." : "Generate"}
                 </button>
               </div>
@@ -175,7 +165,6 @@ const StudyDashboard = () => {
   const handleDeletePDF = async (roadmapUid, pdfUid) => {
     try {
       await StudyAreaService.deletePDF(roadmapUid, pdfUid);
-      // Refresh the PDFs list after successful deletion
       fetchData();
     } catch (error) {
       console.error("Error deleting PDF:", error);
@@ -186,7 +175,6 @@ const StudyDashboard = () => {
     fetchData();
   }, []);
 
-  // Function to format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -198,10 +186,8 @@ const StudyDashboard = () => {
 
   return (
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-md">
-      {/* Add New Study Area Button */}
       <CreateRoadmapModal />
 
-      {/* Current Study Areas */}
       <div className="mb-12">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Current Study Areas
@@ -210,13 +196,11 @@ const StudyDashboard = () => {
           {studyAreas?.map((area) => (
             <div
               key={area.uid}
-              className="flex flex-col p-4 rounded-md border border-gray-200 bg-white hover:shadow-sm transition-shadow w-64 h-fit"
-            >
+              className="flex flex-col p-4 rounded-md border border-gray-200 bg-white hover:shadow-sm transition-shadow w-64 h-fit">
               <div className="flex items-center justify-between mb-3">
                 <Link
                   className="flex items-center gap-2"
-                  to={`/studyarea/${area.uid}`}
-                >
+                  to={`/studyarea/${area.uid}`}>
                   <FolderOpen className="text-orange-400" size={20} />
                   <span className="text-sm font-medium text-gray-700">
                     {area.subject}
@@ -234,8 +218,7 @@ const StudyDashboard = () => {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="-ms-1 me-1.5 size-4"
-                  >
+                    className="-ms-1 me-1.5 size-4">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -286,14 +269,11 @@ const StudyDashboard = () => {
             <div>Overview</div>
           </div>
 
-          {/* Table Body */}
           <div className="divide-y divide-gray-200 bg-white">
             {recentPDFs.map((pdf) => (
               <div
                 key={pdf.uid}
-                className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4"
-              >
-                {/* File Icon & Name (Span 5 columns) */}
+                className="grid grid-cols-12 px-6 py-4 items-center hover:bg-gray-50 gap-4">
                 <div className="col-span-5 flex items-center gap-3">
                   <FileText className="text-red-400 flex-shrink-0" size={20} />
                   <div className="text-sm text-align-left font-medium text-gray-700 hover:text-purple-600 break-words whitespace-normal overflow-hidden">
@@ -303,20 +283,17 @@ const StudyDashboard = () => {
                   </div>
                 </div>
 
-                {/* Date (Span 3 columns) */}
                 <div className="col-span-3 text-sm text-gray-500">
                   {formatDate(pdf.date_uploaded)}
                 </div>
 
-                {/* Section Label & Delete Button (Span 4 columns, ensuring button is visible) */}
                 <div className="col-span-4 flex items-center justify-between">
                   <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-600 text-xs truncate">
                     {pdf.notes.overview}
                   </span>
                   <button
                     onClick={() => handleDeletePDF(pdf.parent_roadmap, pdf.uid)}
-                    className="text-gray-400 hover:text-red-500 flex-shrink-0"
-                  >
+                    className="text-gray-400 hover:text-red-500 flex-shrink-0">
                     <Trash2 size={18} />
                   </button>
                 </div>

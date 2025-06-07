@@ -1,4 +1,3 @@
-// authservices.js
 import api from "../apiConfig";
 import { useContext } from "react";
 import { MyContext } from "../../../MyContext";
@@ -49,7 +48,6 @@ const authServices = {
         try {
             const response = await api.get("/users/isauthenticated");
             if (response.data.isAuthenticated) {
-                // Update local storage with latest user data
                 console.log(response.data.user)
                 return {
                     isAuthenticated: true,

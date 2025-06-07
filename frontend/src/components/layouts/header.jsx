@@ -11,12 +11,10 @@ const Header = () => {
   return (
     <header className="w-full bg-white px-6 py-3 h-fit">
       <div className="flex items-center justify-between gap-4">
-        {/* Hamburger Menu Button (if needed) */}
         <button className="block lg:hidden p-2 hover:bg-gray-100 rounded-full">
           <Menu size={24} className="text-gray-600" />
         </button>
 
-        {/* Search Bar */}
         <div className="flex-1 max-w-2xl">
           <div className="relative">
             <Search
@@ -31,30 +29,11 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Right Side Icons */}
         <div className="flex items-center gap-4">
-          {/* Settings Button */}
-          {/* <button
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-            aria-label="Settings"
-          >
-            <Settings size={24} className="text-gray-600" />
-          </button> */}
-
-          {/* Profile Picture */}
-          {/* <button className="relative group flex items-center gap-2 cursor-pointer bg-pink-100 p-2 rounded-full transition-colors duration-200">
-            <LogOut
-              size={24}
-              className="text-pink-500 transform-gpu scale-x-[-1]"
-            />
-            <span className="text-pink-500">Logout</span>
-          </button> */}
-
           {/* User Profile */}
           <Link
             to="/profile"
-            className="flex items-center bg-white p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
-          >
+            className="flex items-center bg-white p-2 hover:bg-gray-50 rounded-full transition-colors duration-200">
             <img
               alt="User Profile"
               src={`${
@@ -62,12 +41,6 @@ const Header = () => {
               }${me?.pfp}`}
               className="size-10 rounded-full object-cover"
             />
-            {/* <div>
-              <p className="text-xs">
-                <strong className="block font-medium">{me?.username}</strong>
-                <span>{me?.email}</span>
-              </p>
-            </div> */}
           </Link>
         </div>
       </div>
