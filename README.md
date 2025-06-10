@@ -4,36 +4,52 @@ Aristotle.ai is a **student productivity management app** built with **React.js*
 
 ## Features
 
-✅ **Roadmap Generation & Tracking** - Create, customize, and track study roadmaps.  
-✅ **Schedule Tracking** - Manage study schedules with reminders and deadlines.  
-✅ **AI-powered PDF Summarization & Chat** - Upload PDFs, get AI-generated summaries, and chat with the document.  
-✅ **Multiple Roadmap & Study Area Management** - Organize studies into different subjects or areas.  
-✅ **To-Do List with Labels** - Efficient task management with labeled categorization.  
+✅ **Roadmap Generation & Tracking** - Create, customize, and track study roadmaps.
+✅ **Schedule Tracking** - Manage study schedules with reminders and deadlines.
+✅ **AI-powered PDF Summarization & Chat** - Upload PDFs, get AI-generated summaries, and chat with the document.
+✅ **Multiple Roadmap & Study Area Management** - Organize studies into different subjects or areas.
+✅ **To-Do List with Labels** - Efficient task management with labeled categorization.
 
 ## Tech Stack
 
-- **Frontend:** React.js  
-- **Backend:** Django & Django REST Framework  
-- **AI Integration:** Gemini AI  
-- **Database:** PostgreSQL  
-- **Authentication:** JWT-based authentication  
+- **Frontend:** React.js
+- **Backend:** Django & Django REST Framework
+- **AI Integration:** Gemini AI
+- **Database:** PostgreSQL
+- **Authentication:** JWT-based authentication
+
+## Screenshots
+
+Here are some screenshots showcasing Aristotle.ai in action:
+
+| Screenshot | Description |
+|------------|-------------|
+| ![Dashboard Overview](screenshots/dashboard.png) | A glance at the main dashboard, showing active roadmaps and upcoming tasks. |
+| ![Roadmap Creation](screenshots/roadmap.png) | Creating a new study roadmap with customizable steps and deadlines. |
+| ![Flashcards and PDFs](screenshots/roadmap2.png) | Managing flashcards and PDFs related to specific roadmap. |
+| ![PDF Summarization Interface](screenshots/pdfsummarize.png) | Interacting with the AI for PDF summarization and asking questions about the document. |
+| ![Schedule View](screenshots/schedule.png) | A view of the integrated study schedule, highlighting deadlines and events. |
+| ![User Profile View](screenshots/userprofile.png) | User profile view to provide a glance at overall progress. |
 
 ## Installation
 
 ### Prerequisites
-Ensure you have the following installed:  
-- Node.js & npm  
-- Python & pip  
-- PostgreSQL  
+
+Ensure you have the following installed:
+
+- Node.js & npm
+- Python & pip
+- PostgreSQL
 
 ### Backend Setup (Django)
+
 ```bash
-git clone https://github.com/yourusername/aristotle-ai.git
+git clone [https://github.com/yourusername/aristotle-ai.git](https://github.com/yourusername/aristotle-ai.git)
 cd aristotle-ai/backend
 
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # For Windows use: venv\Scripts\activate
+source venv/bin/activate   # For Windows use: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -46,23 +62,15 @@ python manage.py runserver
 ```
 
 ### Frontend Setup (React)
+
 ```bash
-cd ../frontend
+# Navigate to frontend directory
+cd frontend
 
 # Install dependencies
 npm install
 
-# Start React app
-npm start
+# Start development server
+npm run dev  # Since this is a Vite project based on the vite.config.js
+
 ```
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|---------|-------------|
-| GET | `/api/roadmaps/` | Fetch all roadmaps |
-| POST | `/api/roadmaps/` | Create a new roadmap |
-| GET | `/api/todos/` | Fetch all to-do tasks |
-| POST | `/api/todos/` | Add a new task |
-| POST | `/api/upload-pdf/` | Upload a PDF for AI processing |
-| GET | `/api/chat-pdf/{id}/` | Chat with a specific PDF |
