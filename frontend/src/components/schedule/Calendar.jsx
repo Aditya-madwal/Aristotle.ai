@@ -15,15 +15,10 @@ import { CalendarServices } from "../../lib/api/ScheduleServices/CalendarService
 
 const Calendar = ({ setEventProps, events }) => {
   console.log("events ==> ", events);
-  // const [events, setEvents] = useState({});
   const [currentMonth, setCurrentMonth] = useState(new Date());
   let today = new Date();
   today = today.toISOString().split("T")[0];
   const currentDate = today;
-  // const currentDay = format(currentMonth, "dd");
-  // const currentMonthName = format(currentMonth, "mm");
-  // const currentYear = format(currentMonth, "yyyy");
-  // const weekday = format(currentMonth, "EEEE");
 
   const renderHeader = () => {
     return (
@@ -45,13 +40,11 @@ const Calendar = ({ setEventProps, events }) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return (
       <div
-        className={`grid grid-cols-7 mt-2 text-center font-medium text-gray-600 pb-2 bg-purple-100 pt-2 rounded-t-lg mb-2`}
-      >
+        className={`grid grid-cols-7 mt-2 text-center font-medium text-gray-600 pb-2 bg-purple-100 pt-2 rounded-t-lg mb-2`}>
         {days.map((day, index) => (
           <div
             key={index}
-            className={`${"Sun" == day ? "text-purple-500" : ""}`}
-          >
+            className={`${"Sun" == day ? "text-purple-500" : ""}`}>
             {day}
           </div>
         ))}
@@ -82,8 +75,7 @@ const Calendar = ({ setEventProps, events }) => {
               "Sunday" == format(day, "EEEE")
                 ? "bg-purple-100 text-purple-900"
                 : ""
-            }`}
-          >
+            }`}>
             <span
               className={`text-sm ${
                 currentDate == formattedDate
@@ -110,8 +102,7 @@ const Calendar = ({ setEventProps, events }) => {
                     className={`text-xs p-1 rounded-lg mb-1 ${
                       event.status ? "opacity-50" : ""
                     }`}
-                    onClick={() => setEventProps(event)}
-                  >
+                    onClick={() => setEventProps(event)}>
                     {event.eventTitle}
                   </div>
                 ))}

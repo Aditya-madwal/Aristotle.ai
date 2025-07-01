@@ -6,7 +6,7 @@ import Calendar from "./Calendar";
 import AddEventModal from "./AddEventModal";
 import { CalendarServices } from "../../lib/api/ScheduleServices/CalendarServices";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Add this import
+import "react-toastify/dist/ReactToastify.css";
 
 const ScheduleDashboard = ({ setEventProps }) => {
   const { me, setMe } = useContext(MyContext);
@@ -29,7 +29,7 @@ const ScheduleDashboard = ({ setEventProps }) => {
       });
     } catch (error) {
       console.log(error);
-      toast.error("Failed to fetch events"); // Add error toast
+      toast.error("Failed to fetch events");
     }
   };
 
@@ -70,8 +70,7 @@ const ScheduleDashboard = ({ setEventProps }) => {
           </h1>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 text-purple-600 hover:text-purple-700 bg-purple-100 p-2 px-4 rounded-full"
-          >
+            className="flex items-center gap-2 text-purple-600 hover:text-purple-700 bg-purple-100 p-2 px-4 rounded-full">
             <Plus size={20} />
             <span className="text-sm font-medium">Add Event</span>
           </button>

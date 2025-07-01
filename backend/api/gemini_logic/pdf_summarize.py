@@ -166,7 +166,7 @@ def save_notes(notes: Dict, filename: str) -> None:
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(notes, f, indent=2, ensure_ascii=False)
 
-# Example usage
+# # Example usage
 # if __name__ == "__main__":
 #     load_dotenv()
 #     GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')

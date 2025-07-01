@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.image:
-            return obj.image.name  # This ensures the relative path is returned
+            return obj.image.name
         return None
 
 

@@ -1,11 +1,11 @@
 import React from "react";
 import process from "process";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
-const UserIdentity = ({userInfo, roadmaps, pdfs}) => {
+const UserIdentity = ({ userInfo, roadmaps, pdfs }) => {
   useEffect(() => {
-    console.log("user :")
-    console.log(userInfo)
+    console.log("user :");
+    console.log(userInfo);
   }, []);
   return (
     <div className="h-fit bg-white p-8 rounded-lg w-full mb-4">
@@ -14,7 +14,9 @@ const UserIdentity = ({userInfo, roadmaps, pdfs}) => {
           {/* Profile Image */}
           <div className="w-40 h-40 relative rounded-full overflow-hidden p-1 border-2 border-violet-500">
             <img
-              src={`https://ipfs.io/ipfs/${userInfo?.cid}`}
+              src={`${
+                import.meta.env.VITE_BACKEND_URL || "http://localhost:8000"
+              }${userInfo?.pfp}`}
               alt={userInfo?.name}
               className="w-full h-full object-cover"
             />
@@ -41,8 +43,7 @@ const UserIdentity = ({userInfo, roadmaps, pdfs}) => {
             <div className="grid grid-cols-2 gap-y-4 gap-x-4 text-sm">
               <div
                 className="border p-2 rounded-lg"
-                style={{wordWrap: "break-word"}}
-              >
+                style={{ wordWrap: "break-word" }}>
                 <p className="text-purple-600 font-medium">Education status</p>
                 <p className="text-gray-900">{userInfo.course}</p>
               </div>

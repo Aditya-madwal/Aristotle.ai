@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 
 import { PdfServices } from "../lib/api/PdfServices/pdfServices";
 
-// Sample Data : for chat props
 const SAMPLE_DATA = {
   document: {
     id: "124",
@@ -98,8 +97,7 @@ const Header = ({ title, roadmapUid }) => (
     <div className="flex items-center gap-4">
       <Link
         to={`/studyarea/${roadmapUid}`}
-        className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-md text-sm"
-      >
+        className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-md text-sm">
         <ChevronLeft size={16} />
         Back to Dashboard
       </Link>
@@ -152,19 +150,16 @@ const Summary = ({ notes }) => {
         {notes?.sections?.map((section, index) => (
           <div
             key={index}
-            className="border rounded-lg p-4 bg-white hover:shadow-sm transition-shadow"
-          >
+            className="border rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
             <button
               onClick={() => toggleSection(index)}
-              className="w-full text-left flex justify-between items-center"
-            >
+              className="w-full text-left flex justify-between items-center">
               <h4 className="text-sm font-medium">{section.title}</h4>
               <motion.span
                 initial={{ rotate: 0 }}
                 animate={{ rotate: expandedSection === index ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
-                className="text-purple-600"
-              >
+                className="text-purple-600">
                 <ChevronDown size={16} />
               </motion.span>
             </button>
@@ -176,8 +171,7 @@ const Summary = ({ notes }) => {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.1, ease: "easeInOut" }}
-                  className="mt-4 space-y-4 overflow-hidden"
-                >
+                  className="mt-4 space-y-4 overflow-hidden">
                   {/* Section Summary */}
                   {section?.summary && section.summary.trim() !== "" && (
                     <p className="text-sm text-gray-600">{section.summary}</p>
@@ -256,8 +250,7 @@ const ChatMessage = ({ message }) => (
   <div
     className={`${
       message.sender === "assistant" ? "bg-purple-50" : "border"
-    } p-4 rounded-lg`}
-  >
+    } p-4 rounded-lg`}>
     <p className="text-xs text-gray-600 mb-1">
       {message.sender === "assistant" ? "Assistant" : "You"}
     </p>
@@ -318,8 +311,7 @@ const TabNavigation = ({ activeTab, onTabChange }) => {
                 ? "text-purple-600 font-medium"
                 : "text-gray-500 hover:text-purple-500"
             }`}
-            onClick={() => onTabChange(tab)}
-          >
+            onClick={() => onTabChange(tab)}>
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
 
             {/* Animated Underline */}
