@@ -75,7 +75,6 @@ function App() {
             </AuthRequiringRoutes>
           }
         />
-        <Route path="/introduction" element={<AristotleLandingPage />} />
         <Route
           path="/schedule"
           element={
@@ -84,6 +83,7 @@ function App() {
             </AuthRequiringRoutes>
           }
         />
+        <Route path="/introduction" element={<AristotleLandingPage />} />
         <Route
           path="/profile"
           element={
