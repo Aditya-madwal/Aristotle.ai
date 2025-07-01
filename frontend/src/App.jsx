@@ -18,6 +18,7 @@ import Logout from "./lib/auth/Logout";
 import StudyAreaDashboard from "./pages/StudyArea";
 import PDFAnalysisPage from "./pages/Pdf";
 import User from "./pages/User";
+import AristotleLandingPage from "./pages/Landing";
 
 const RegisterAndLogout = () => {
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ function App() {
             </AuthRequiringRoutes>
           }
         />
+        <Route path="/landing" element={<AristotleLandingPage />} />
         <Route
           path="/schedule"
           element={

@@ -35,14 +35,18 @@ class RegistrationView(APIView):
         user = CustomUser.objects.get(username=serializer.data['username'])
         user.save()
 
+        # if user.pfp == "" or user.pfp == None:
+        #     user.cid = "bafkreibogcihe2b6gya5ezuncapcu57a4ban7xvbyp2e2qezq2taaykpbm"
+        
         if user.pfp == "" or user.pfp == None:
-            user.cid = "bafkreibogcihe2b6gya5ezuncapcu57a4ban7xvbyp2e2qezq2taaykpbm"
+            user.pfp = "/pfps/default.png"
+
 
         # Upload file to IPFS
-        ipfs_service = IPFSService()
-        cid = ipfs_service.upload_file(file=user.pfp, filename=user.username)
+        # ipfs_service = IPFSService()
+        # cid = ipfs_service.upload_file(file=user.pfp, filename=user.username)
 
-        user.cid = cid
+        # user.cid = cid
         user.save()
 
         refresh = RefreshToken.for_user(user)

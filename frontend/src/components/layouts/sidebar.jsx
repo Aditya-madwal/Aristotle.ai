@@ -24,8 +24,7 @@ const LogoutModal = ({ isOpen, onClose, navigate }) => {
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+            className="text-gray-500 hover:text-gray-700">
             <X size={20} />
           </button>
         </div>
@@ -35,14 +34,12 @@ const LogoutModal = ({ isOpen, onClose, navigate }) => {
         <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
-          >
+            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
             Cancel
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 rounded-lg bg-pink-500 text-white hover:bg-pink-600 flex items-center gap-2"
-          >
+            className="px-4 py-2 rounded-lg bg-pink-500 text-white hover:bg-pink-600 flex items-center gap-2">
             <LogOut size={18} className="transform-gpu scale-x-[-1]" />
             Logout
           </button>
@@ -88,17 +85,20 @@ const Sidebar = ({ active }) => {
     <>
       <div className="flex h-screen">
         <div
-          className={`flex h-screen flex-col justify-between bg-white transition-all duration-300 ${
+          className={`flex h-screen flex-col justify-between transition-all duration-300 ${
             isSidebarOpen ? "w-64" : "w-20"
-          }`}
-        >
+          }`}>
           <div className="px-4 py-4">
             <div className="flex items-center justify-between gap-2">
               <button
                 onClick={toggleSidebar}
-                className={`grid h-10 place-content-center rounded-lg bg-gray-100 text-lg font-semibold text-gray-600 transition-all duration-300 w-full`}
-              >
-                {isSidebarOpen ? "Aristotle.ai" : "A"}
+                className="flex items-center gap-2 w-full bg-transparent border-none shadow-none p-0">
+                <img src="/icon.png" alt="Logo" className="h-8 w-8" />
+                {isSidebarOpen && (
+                  <span className="text-lg font-semibold text-gray-600">
+                    Aristotle.ai
+                  </span>
+                )}
               </button>
             </div>
 
@@ -114,8 +114,7 @@ const Sidebar = ({ active }) => {
                         activeTab === tab
                           ? "text-[#7f55e0] bg-[#7f55e0] bg-opacity-20"
                           : "text-gray-500 hover:bg-gray-100"
-                      }`}
-                  >
+                      }`}>
                     <span className="flex-shrink-0">{icon}</span>
                     {isSidebarOpen && name}
                   </Link>
@@ -124,11 +123,10 @@ const Sidebar = ({ active }) => {
             </ul>
           </div>
 
-          <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
+          <div>
             <button
               onClick={() => setLogoutModalOpen(true)}
-              className="relative group flex items-center gap-2 cursor-pointer bg-pink-100 p-2 transition-colors duration-200 w-full justify-center"
-            >
+              className="relative group flex items-center gap-2 cursor-pointer bg-pink-100 p-2 transition-colors duration-200 w-full justify-center">
               <LogOut
                 size={24}
                 className="text-pink-500 transform-gpu scale-x-[-1]"
