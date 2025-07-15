@@ -1,0 +1,13 @@
+{
+  "staticSite": {
+    "name": "aristotle",
+    "buildCommand": "npm run build",
+    "publishPath": "dist",
+    "routes": [
+      {
+        "path": "/*",
+        "rewrite": "/index.html"
+      }
+    ]
+  }
+}
