@@ -1,9 +1,95 @@
-import React, { useState } from "react";
-import { Book, Video, Link as LinkIcon, ChevronRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Book, Video, Link as LinkIcon, ChevronRight, Radio } from "lucide-react";
 import StudyAreaServices from "../../lib/api/StudyAreaDashboard.jsx/StudyAreaServices";
 
+import { X } from "lucide-react";
+
+
+
+const QuizModel = ({ isOpen, onClose, quizQuestions , onComplete}) => {
+  const [answers, setAnswers] = useState({});
+
+  if (!isOpen) return null;
+
+  const checkAnswers = () => {
+    let score = 0;
+    quizQuestions?.forEach((question, index) => {
+      if (answers[index] === question.correct_answer) {
+        score++;
+      }
+    });
+    alert(`Your score is: ${score} / ${quizQuestions?.length}`);
+    const score_percent = score / quizQuestions?.length;
+    if (score_percent >= 0.8) {
+      onComplete();
+      alert("congo, you have completed the milestone");
+    } else {
+      alert("you need to score more than 80% to complete milestone")
+    }
+  };
+
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="rounded-lg bg-white p-8 shadow-2xl max-w-md w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Quiz</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700">
+            <X size={20} />
+          </button>
+        </div>
+
+        {quizQuestions?.map((question, index) => (
+          <div>
+            <h3>{question.question}</h3>
+            <div className="space-y-2">
+              {question.options.map((option, optionIndex) => (
+                <label key={optionIndex}>
+                  <input 
+                    type="radio" 
+                    name={`question-${index}`} 
+                    value={option} 
+                    checked={answers[index] === option}
+                    onChange={() => setAnswers(prev => ({...prev, [index]: option}))}
+                  />
+                  <span className="text-gray-700">{option}</span>
+                  <br />
+                </label>
+              ))}
+            </div>
+            <br />
+          </div>
+        ))}
+        
+
+        <div className="flex gap-3 justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100">
+            Cancel
+          </button>
+
+          <button 
+            onClick={checkAnswers}
+            className="rounded bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700">
+            Check Answers
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const RoadmapMilestone = ({ milestone, isCurrentMilestone, onComplete }) => {
+  useEffect(() => {
+    console.log("Milestone data:", milestone);
+  }, []);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isquizopen, setIsQuizOpen] = useState(false);
+
   const getResourceIcon = (type) => {
     switch (type) {
       case "video":
@@ -14,6 +100,15 @@ const RoadmapMilestone = ({ milestone, isCurrentMilestone, onComplete }) => {
         return <LinkIcon className="w-4 h-4" />;
     }
   };
+
+  const handleUpdateMilestone = () => {
+    onComplete();
+    setIsQuizOpen(false);
+  };
+
+  if (isquizopen) {
+    return(<QuizModel isOpen={isquizopen} onClose={() => setIsQuizOpen(false)} quizQuestions={milestone.quiz} onComplete={handleUpdateMilestone}/>);
+  }
 
   return (
     <div
@@ -94,7 +189,8 @@ const RoadmapMilestone = ({ milestone, isCurrentMilestone, onComplete }) => {
       </button>
       {isCurrentMilestone && (
         <button
-          onClick={onComplete}
+          // onClick={onComplete}
+          onClick={() => setIsQuizOpen(true)}
           className={`mt-2 w-full py-1.5 px-3 rounded-full text-sm text-center transition-colors duration-200 
                     ${
                       isCurrentMilestone

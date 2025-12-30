@@ -89,6 +89,13 @@ class RoadmapGenerator:
                             "difficulty": "beginner/intermediate/advanced",
                             "estimated_time": "estimated completion time"
                         }}
+                    ],
+                    "quiz_questions" : [
+                        {{
+                            "question" : "Question text",
+                            "options" : ["4 options for the given question"],
+                            "correct_option" : "correct answer among the question options"
+                        }}
                     ]
                 }}
             ],

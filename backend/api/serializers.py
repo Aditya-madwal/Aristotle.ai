@@ -59,15 +59,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['uid', 'title', 'description', 'difficulty']
 
+class QuizSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model = MilestoneQuiz
+        fields = ['question', 'correct_answer', 'options']
 
 class MileStoneSerializer(serializers.ModelSerializer):
     resources = serializers.SerializerMethodField()
     projects = serializers.SerializerMethodField()
+    quiz = serializers.SerializerMethodField()
 
     class Meta:
         model = MileStone
         fields = ['uid', 'title', 'duration', 'status',
-                  'topics', 'resources', 'projects']
+                  'topics', 'resources', 'projects', 'quiz']
 
     def get_resources(self, obj):
         resources = Resource.objects.filter(parent_milestone=obj)
@@ -76,6 +81,12 @@ class MileStoneSerializer(serializers.ModelSerializer):
     def get_projects(self, obj):
         projects = Project.objects.filter(parent_milestone=obj)
         return ProjectSerializer(projects, many=True).data
+    
+    def get_quiz(self, obj):
+        quiz_questions = MilestoneQuiz.objects.filter(milestone=obj)
+        return QuizSerializer(quiz_questions, many=True).data
+    
+    
 
 
 class RoadmapSerializer(serializers.ModelSerializer):

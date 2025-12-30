@@ -42,6 +42,15 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+class MilestoneQuiz(models.Model) :
+    milestone = models.ForeignKey("api.MileStone", on_delete=models.CASCADE)
+    question = models.CharField(max_length=1024)
+    correct_answer = models.CharField(max_length=100)
+    options = models.JSONField()
+
+    def __str__(self):
+        return f"{self.milestone} - {self.id}"
+
 class Resource(models.Model):
     uid = models.CharField(
         max_length=7,

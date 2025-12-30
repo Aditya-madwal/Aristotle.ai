@@ -158,6 +158,9 @@ class RoadmapDetailView(APIView):
             for p in ms["projects"]:
                 Project.objects.create(
                     title=p["title"], description=p["description"], difficulty=p["difficulty"], parent_milestone=x)
+            
+            for q in ms["quiz_questions"] :
+                MilestoneQuiz.objects.create(milestone = x, question = q['question'], options = q['options'], correct_answer = q['correct_option'])
 
         first_milestone = MileStone.objects.filter(
             parent_roadmap=roadmap_obj)[0]
